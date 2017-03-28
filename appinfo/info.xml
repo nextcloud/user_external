@@ -6,13 +6,13 @@
 	<licence>AGPL</licence>
 	<author>Robin Appelman</author>
 	<documentation>
-            <admin>https://doc.owncloud.org/server/9.0/admin_manual/configuration_user/user_auth_ftp_smb_imap.html</admin>
-        </documentation>
-	<website>https://github.com/owncloud/apps/tree/master/user_external</website>
-	<bugs>https://github.com/owncloud/apps/issues</bugs>
-	<repository type="git">https://github.com/owncloud/apps.git</repository>
+  	<admin>https://docs.nextcloud.com/server/12/admin_manual/configuration_user/user_auth_ftp_smb_imap.html</admin>
+  </documentation>
+	<website>https://github.com/nextcloud/apps/tree/master/user_external</website>
+	<bugs>https://github.com/nextcloud/apps/issues</bugs>
+	<repository type="git">https://github.com/nextcloud/apps.git</repository>
 	<dependencies>
-		<nextcloud min-version="11" max-version="11" />
+		<nextcloud min-version="12" max-version="12" />
 	</dependencies>
 	<version>0.4</version>
 	<shipped>true</shipped>
@@ -20,5 +20,4 @@
 		<authentication/>
 		<prelogin/>
 	</types>
-	<ocsid>166060</ocsid>
 </info>

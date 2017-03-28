@@ -1,6 +1,6 @@
 External user authentication
 ============================
-Authenticate user login against FTP, IMAP or SMB.
+**Authenticate user login against FTP, IMAP or SMB.**
 
 Passwords are not stored locally; authentication always happens against
 the remote server.
@@ -11,12 +11,12 @@ When modifying the `user_backends` configuration, you need to
 update the database table's `backend` field, or your users will lose
 their configured display name.
 
-If something does not work, check the log file at `owncloud/data/owncloud.log`.
+If something does not work, check the log file at `nextcloud/data/nextcloud.log`.
 
 
 FTP
 ---
-Authenticate ownCloud users against a FTP server.
+Authenticate Nextcloud users against a FTP server.
 
 
 ### Configuration
@@ -55,8 +55,8 @@ needs to be activated.
 
 IMAP
 ----
-Authenticate ownCloud users against an IMAP server.
-IMAP user and password need to be given for the ownCloud login
+Authenticate Nextcloud users against an IMAP server.
+IMAP user and password need to be given for the Nextcloud login
 
 
 ### Configuration
@@ -112,9 +112,9 @@ The `smbclient` executable needs to be installed and accessible within `$PATH`.
 WebDAV
 ------
 
-Authenticate users by a WebDAV call. You can use any WebDAV server, ownCloud server or other web server to authenticate. It should return http 200 for right credentials and http 401 for wrong ones.
+Authenticate users by a WebDAV call. You can use any WebDAV server, Nextcloud server or other web server to authenticate. It should return http 200 for right credentials and http 401 for wrong ones.
 
-Attention: This app is not compatible with the LDAP user and group backend. This app is not the WebDAV interface of ownCloud, if you don't understand what it does then do not enable it.
+Attention: This app is not compatible with the LDAP user and group backend. This app is not the WebDAV interface of Nextcloud, if you don't understand what it does then do not enable it.
 
 ### Configuration
 The only supported parameter is the URL of the web server.
