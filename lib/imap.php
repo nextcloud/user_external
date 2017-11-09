@@ -46,8 +46,21 @@ class OC_User_IMAP extends \OCA\user_external\Base {
 			return false;
 		}
 
+		$result = OC_DB::executeAudited(
+			'SELECT `userid` FROM `*PREFIX*preferences`'
+			. ' WHERE `appid` = "settings" AND `configkey` = "email" AND `configvalue` = ?',
+			array($uid)
+		);
+		$users = array();
+		while ($row = $result->fetchRow()) {
+			$users[] = $row['userid'];
+		}
+
+		if(count($users) === 1) {
+			$username = $uid;
+			$uid = $users[0];
  		// Check if we only want logins from ONE domain and strip the domain part from UID		
- 		if($this->domain != '') {
+		}elseif($this->domain != '') {
  			$pieces = explode('@', $uid);
  			if(count($pieces) == 1) {
  				$username = $uid . "@" . $this->domain;
