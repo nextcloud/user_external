@@ -12,7 +12,7 @@
 	<bugs>https://github.com/nextcloud/apps/issues</bugs>
 	<repository type="git">https://github.com/nextcloud/apps.git</repository>
 	<dependencies>
-		<nextcloud min-version="12" max-version="12" />
+		<nextcloud min-version="13" max-version="13" />
 	</dependencies>
 	<version>0.4</version>
 	<shipped>true</shipped>
