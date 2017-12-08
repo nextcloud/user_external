@@ -56,7 +56,13 @@ class OC_User_IMAP extends \OCA\user_external\Base {
 			$users[] = $row['userid'];
 		}
 
-		if(count($users) === 1) {
+		// Replace escaped @ symbol in uid (which is a mail address)
+		// but only if there is no @ symbol and if there is a %40 inside the uid
+		if (!(strpos($uid, '@') !== false) && (strpos($uid, '%40') !== false)) {
+			$uid = str_replace("%40","@",$uid);
+		}
+
+    if(count($users) === 1) {
 			$username = $uid;
 			$uid = $users[0];
  		// Check if we only want logins from ONE domain and strip the domain part from UID		
