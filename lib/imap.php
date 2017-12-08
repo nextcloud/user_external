@@ -46,6 +46,12 @@ class OC_User_IMAP extends \OCA\user_external\Base {
 			return false;
 		}
 
+		// Replace escaped @ symbol in uid (which is a mail address)
+		// but only if there is no @ symbol and if there is a %40 inside the uid
+		if (!(strpos($uid, '@') !== false) && (strpos($uid, '%40') !== false)) {
+			$uid = str_replace("%40","@",$uid);
+		}
+
 		$result = OC_DB::executeAudited(
 			'SELECT `userid` FROM `*PREFIX*preferences`'
 			. ' WHERE `appid` = "settings" AND `configkey` = "email" AND `configvalue` = ?',
@@ -54,12 +60,6 @@ class OC_User_IMAP extends \OCA\user_external\Base {
 		$users = array();
 		while ($row = $result->fetchRow()) {
 			$users[] = $row['userid'];
-		}
-
-		// Replace escaped @ symbol in uid (which is a mail address)
-		// but only if there is no @ symbol and if there is a %40 inside the uid
-		if (!(strpos($uid, '@') !== false) && (strpos($uid, '%40') !== false)) {
-			$uid = str_replace("%40","@",$uid);
 		}
 
 		if(count($users) === 1) {
