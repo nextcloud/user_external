@@ -62,7 +62,7 @@ class OC_User_IMAP extends \OCA\user_external\Base {
 			$uid = str_replace("%40","@",$uid);
 		}
 
-    if(count($users) === 1) {
+		if(count($users) === 1) {
 			$username = $uid;
 			$uid = $users[0];
  		// Check if we only want logins from ONE domain and strip the domain part from UID		
