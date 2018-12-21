@@ -8,9 +8,9 @@
 	<documentation>
   	<admin>https://docs.nextcloud.com/server/15/admin_manual/configuration_user/user_auth_ftp_smb_imap.html</admin>
   </documentation>
-	<website>https://github.com/nextcloud/apps/tree/master/user_external</website>
-	<bugs>https://github.com/nextcloud/apps/issues</bugs>
-	<repository type="git">https://github.com/nextcloud/apps.git</repository>
+	<website>https://github.com/nextcloud/user_external/</website>
+	<bugs>https://github.com/nextcloud/user_external/issues</bugs>
+	<repository type="git">https://github.com/nextcloud/user_external.git</repository>
 	<dependencies>
 		<nextcloud min-version="13" max-version="15" />
 	</dependencies>
