@@ -15,10 +15,9 @@
 	<bugs>https://github.com/nextcloud/user_external/issues</bugs>
 	<repository type="git">https://github.com/nextcloud/user_external.git</repository>
 	<dependencies>
-		<nextcloud min-version="13" max-version="15" />
+		<nextcloud min-version="15" max-version="15" />
 	</dependencies>
-	<version>0.4</version>
-	<shipped>true</shipped>
+	<version>0.5</version>
 	<types>
 		<authentication/>
 		<prelogin/>
