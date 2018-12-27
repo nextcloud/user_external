@@ -34,7 +34,7 @@ class WebDavAuth extends Base {
 		list($protocol, $path) = $arr;
 		$url= $protocol.'://'.urlencode($uid).':'.urlencode($password).'@'.$path;
 		$headers = get_headers($url);
-		if($headers==false) {
+		if($headers === false) {
 			\OCP\Util::writeLog('OC_USER_WEBDAVAUTH', 'Not possible to connect to WebDAV Url: "'.$protocol.'://'.$path.'" ', 3);
 			return false;
 

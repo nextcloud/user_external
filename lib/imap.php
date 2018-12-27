@@ -65,12 +65,12 @@ class OC_User_IMAP extends \OCA\user_external\Base {
 		if(count($users) === 1) {
 			$username = $uid;
 			$uid = $users[0];
- 		// Check if we only want logins from ONE domain and strip the domain part from UID		
-		}elseif($this->domain != '') {
+ 		// Check if we only want logins from ONE domain and strip the domain part from UID
+	}elseif($this->domain !== '') {
  			$pieces = explode('@', $uid);
- 			if(count($pieces) == 1) {
+ 			if(count($pieces) === 1) {
  				$username = $uid . "@" . $this->domain;
- 			}elseif((count($pieces) == 2) and ($pieces[1] == $this->domain)) {
+ 			}elseif((count($pieces) === 2) and ($pieces[1] === $this->domain)) {
  				$username = $uid;
  				$uid = $pieces[0];
  			}else{
@@ -79,7 +79,7 @@ class OC_User_IMAP extends \OCA\user_external\Base {
  		}else{
  			$username = $uid;
  		}
- 
+
  		$mbox = @imap_open($this->mailbox, $username, $password, OP_HALFOPEN, 1);
 		imap_errors();
 		imap_alerts();

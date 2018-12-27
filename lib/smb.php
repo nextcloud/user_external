@@ -53,7 +53,7 @@ class OC_User_SMB extends \OCA\user_external\Base{
 		} else if (strpos($lastline, 'NT_STATUS_BAD_NETWORK_NAME') !== false) {
 			//login on minor error
 			goto login;
-		} else if ($retval != 0) {
+		} else if ($retval !== 0) {
 			//some other error
 			OCP\Util::writeLog(
 				'user_external', 'ERROR: smbclient error: ' . trim($lastline),
@@ -91,4 +91,3 @@ class OC_User_SMB extends \OCA\user_external\Base{
 		return false;
 	}
 }
-
