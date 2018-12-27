@@ -28,14 +28,14 @@ class WebDavAuth extends Base {
 	public function checkPassword($uid, $password) {
 		$arr = explode('://', $this->webDavAuthUrl, 2);
 		if( ! isset($arr) OR count($arr) !== 2) {
-			\OCP\Util::writeLog('OC_USER_WEBDAVAUTH', 'Invalid Url: "'.$this->webDavAuthUrl.'" ', 3);
+			OC::$server->getLogger()->error('ERROR: Invalid WebdavUrl: "'.$this->webDavAuthUrl.'" ', ['app' => 'user_external']);
 			return false;
 		}
 		list($protocol, $path) = $arr;
 		$url= $protocol.'://'.urlencode($uid).':'.urlencode($password).'@'.$path;
 		$headers = get_headers($url);
 		if($headers === false) {
-			\OCP\Util::writeLog('OC_USER_WEBDAVAUTH', 'Not possible to connect to WebDAV Url: "'.$protocol.'://'.$path.'" ', 3);
+			OC::$server->getLogger()->error('ERROR: Not possible to connect to WebDAV Url: "'.$protocol.'://'.$path.'" ', ['app' => 'user_external']);
 			return false;
 
 		}

@@ -46,9 +46,9 @@ class OC_User_FTP extends \OCA\user_external\Base{
 	 */
 	public function checkPassword($uid, $password) {
 		if (false === array_search($this->protocol, stream_get_wrappers())) {
-			OCP\Util::writeLog(
-				'user_external',
-				'ERROR: Stream wrapper not available: ' . $this->protocol, OCP\Util::ERROR
+			OC::$server->getLogger()->error(
+				'ERROR: Stream wrapper not available: ' . $this->protocol,
+				['app' => 'user_external']
 			);
 			return false;
 		}

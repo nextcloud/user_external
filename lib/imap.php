@@ -42,7 +42,7 @@ class OC_User_IMAP extends \OCA\user_external\Base {
 	 */
 	public function checkPassword($uid, $password) {
 		if (!function_exists('imap_open')) {
-			OCP\Util::writeLog('user_external', 'ERROR: PHP imap extension is not installed', OCP\Util::ERROR);
+			OC::$server->getLogger()->error('ERROR: PHP imap extension is not installed', ['app' => 'user_external']);
 			return false;
 		}
 
