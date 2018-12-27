@@ -17,7 +17,7 @@
 	<dependencies>
 		<nextcloud min-version="15" max-version="15" />
 	</dependencies>
-	<version>0.5</version>
+	<version>0.5.0</version>
 	<types>
 		<authentication/>
 		<prelogin/>
