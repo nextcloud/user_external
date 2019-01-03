@@ -5,7 +5,7 @@ clone:
 
 pipeline:
   check-app-compatbility:
-    image: nextcloudci/php7.0:php7.0-19
+    image: nextcloudci/php7.2:php7.2-9
     environment:
       - APP_NAME=user_external
       - CORE_BRANCH=master
@@ -25,7 +25,7 @@ pipeline:
         TESTS: check-app-compatbility
 
   signed-off-check:
-    image: nextcloudci/php7.0:php7.0-19
+    image: nextcloudci/php7.2:php7.2-9
     environment:
       - APP_NAME=user_external
       - CORE_BRANCH=master
