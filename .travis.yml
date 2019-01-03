@@ -41,8 +41,6 @@ before_script:
   - find . -name \*.php -exec php -l "{}" \;
 
 script:
-  - ant test
-
   # Check info.xml schema validity
   - wget https://apps.nextcloud.com/schema/apps/info.xsd
   - xmllint appinfo/info.xml --schema info.xsd --noout
