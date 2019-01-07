@@ -9,11 +9,11 @@ env:
     - APP_NAME=user_external
     - PHP_COVERAGE=FALSE
   matrix:
-    - DB=sqlite SERVER=nextcloud/travis_ci/master SERVER_BRANCH=master
+  #  - DB=sqlite SERVER=nextcloud/travis_ci/master SERVER_BRANCH=master
     - DB=sqlite SERVER=nextcloud/travis_ci/master SERVER_BRANCH=stable15
-    - DB=mysql SERVER=nextcloud/travis_ci/master SERVER_BRANCH=master PHP_COVERAGE=TRUE
-    - DB=mysql SERVER=nextcloud/travis_ci/master SERVER_BRANCH=stable15
-    - DB=pgsql SERVER=nextcloud/travis_ci/master SERVER_BRANCH=master
+  #  - DB=mysql SERVER=nextcloud/travis_ci/master SERVER_BRANCH=master PHP_COVERAGE=TRUE
+    - DB=mysql SERVER=nextcloud/travis_ci/master SERVER_BRANCH=stable15 PHP_COVERAGE=TRUE
+  #  - DB=pgsql SERVER=nextcloud/travis_ci/master SERVER_BRANCH=master
     - DB=pgsql SERVER=nextcloud/travis_ci/master SERVER_BRANCH=stable15
 
 matrix:
@@ -21,7 +21,7 @@ matrix:
 
 branches:
   only:
-    - master
+  #  - master
     - /^stable\d+(\.\d+)?$/
 
 before_install:
