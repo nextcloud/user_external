@@ -21,7 +21,7 @@ matrix:
 
 branches:
   only:
-  #  - master
+    - master
     - /^stable\d+(\.\d+)?$/
 
 before_install:
