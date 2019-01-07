@@ -43,4 +43,4 @@ pipeline:
 matrix:
   include:
     - TESTS: signed-off-check
-    - TESTS: check-app-compatbility
+    # - TESTS: check-app-compatbility
