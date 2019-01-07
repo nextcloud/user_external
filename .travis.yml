@@ -45,7 +45,7 @@ script:
 
   # Run phpunit tests
   - cd tests
-  - phpunit --configuration phpunit.xml
+  - phpunit
 
   # Create coverage report
   - sh -c "if [ '$PHP_COVERAGE' != 'FALSE' ]; then wget https://scrutinizer-ci.com/ocular.phar; fi"
