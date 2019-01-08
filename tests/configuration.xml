@@ -1,25 +1,30 @@
-<project name="user_external" basedir="tests" default="test">
+<phpunit bootstrap="bootstrap.php"
+		 verbose="true"
+		 timeoutForSmallTests="900"
+		 timeoutForMediumTests="900"
+		 timeoutForLargeTests="900"
+>
 
-	<property file="build.properties"/>
+	<testsuites>
+		<testsuite name="External User Authentication App Tests">
+			<directory suffix=".php">.</directory>
+			<exclude>config.php</exclude>
+		</testsuite>
+	</testsuites>
 
-	<!-- test - Tests if the code syntax is correct and executes phpunit tests -->
-	<target name="test">
-		<apply executable="php" failonerror="true">
-			<arg value="-l" />
-			<fileset dir=".">
-				<include name="**/*.php" />
-				<exclude name="**/l10n/**" />
-			</fileset>
-		</apply>
+	<!-- filters for code coverage -->
+	<filter>
+		<whitelist>
+			<directory suffix=".php">../../user_external</directory>
+			<exclude>
+				<directory suffix=".php">../../user_external/l10n</directory>
+				<directory suffix=".php">../../user_external/tests</directory>
+			</exclude>
+		</whitelist>
+	</filter>
+	<logging>
+		<!-- and this is where your report will be written -->
+		<log type="coverage-clover" target="./clover.xml"/>
+	</logging>
 
-		<!--<exec executable="phpunit" failonerror="true">-->
-			<!--<arg value="-c" />-->
-			<!--<arg path="${build.src.dir}/app/"/>-->
-			<!--<arg value="- -log-junit" />-->
-			<!--<arg path="${report.dir}/phpunit.xml"/>-->
-			<!--<arg value="- -coverage-clover" />-->
-			<!--<arg path=" ${report.dir}/clover.xml"/>-->
-		<!--</exec>-->
-	</target>
-
-</project>
+</phpunit>
