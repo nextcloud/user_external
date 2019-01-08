@@ -1,4 +1,4 @@
-<project name="user_external" basedir="." default="test">
+<project name="user_external" basedir="tests" default="test">
 
 	<property file="build.properties"/>
 
