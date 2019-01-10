@@ -55,11 +55,11 @@ abstract class Base extends \OC\User\Backend{
 	 * @return string display name
 	 */
 	public function getDisplayName($uid) {
-		$user = OC_DB::executeAudited(
+		$user = \OC::$server->getDatabaseConnection()->executeQuery(
 			'SELECT `displayname` FROM `*PREFIX*users_external`'
 			. ' WHERE `uid` = ? AND `backend` = ?',
 			array($uid, $this->backend)
-		)->fetchRow();
+		)->fetch();
 		$displayName = trim($user['displayname'], ' ');
 		if (!empty($displayName)) {
 			return $displayName;
@@ -170,11 +170,11 @@ abstract class Base extends \OC\User\Backend{
 	 * @return boolean
 	 */
 	public function userExists($uid) {
-		$result = OC_DB::executeAudited(
+		$result = \OC::$server->getDatabaseConnection()->executeQuery(
 			'SELECT COUNT(*) FROM `*PREFIX*users_external`'
 			. ' WHERE LOWER(`uid`) = LOWER(?) AND `backend` = ?',
 			array($uid, $this->backend)
 		);
-		return $result->fetchOne() > 0;
+		return $result->fetch() > 0;
 	}
 }

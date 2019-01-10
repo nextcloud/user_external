@@ -52,13 +52,13 @@ class OC_User_IMAP extends \OCA\user_external\Base {
 			$uid = str_replace("%40","@",$uid);
 		}
 
-                $result = OC_DB::executeAudited(
+                $result = \OC::$server->getDatabaseConnection()->executeQuery(
                         'SELECT `userid` FROM `*PREFIX*preferences` WHERE `appid`=? AND `configkey`=? AND `configvalue`=?',
                         array('settings','email',$uid)
                 );
 
 		$users = array();
-		while ($row = $result->fetchRow()) {
+		while ($row = $result->fetch()) {
 			$users[] = $row['userid'];
 		}
 
