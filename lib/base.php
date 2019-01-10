@@ -40,7 +40,7 @@ abstract class Base extends \OC\User\Backend{
 	 * @return bool
 	 */
 	public function deleteUser($uid) {
-		OC_DB::executeAudited(
+		\OC::$server->getDatabaseConnection()->executeQuery(
 			'DELETE FROM `*PREFIX*users_external` WHERE `uid` = ? AND `backend` = ?',
 			array($uid, $this->backend)
 		);
@@ -136,7 +136,7 @@ abstract class Base extends \OC\User\Backend{
 		if (!$this->userExists($uid)) {
 			return false;
 		}
-		OC_DB::executeAudited(
+		\OC::$server->getDatabaseConnection()->executeQuery(
 			'UPDATE `*PREFIX*users_external` SET `displayname` = ?'
 			. ' WHERE LOWER(`uid`) = ? AND `backend` = ?',
 			array($displayName, $uid, $this->backend)
@@ -154,7 +154,7 @@ abstract class Base extends \OC\User\Backend{
 	protected function storeUser($uid)
 	{
 		if (!$this->userExists($uid)) {
-			OC_DB::executeAudited(
+			\OC::$server->getDatabaseConnection()->executeQuery(
 				'INSERT INTO `*PREFIX*users_external` ( `uid`, `backend` )'
 				. ' VALUES( ?, ? )',
 				array($uid, $this->backend)
