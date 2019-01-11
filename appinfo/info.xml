@@ -1,5 +1,6 @@
 <?xml version="1.0"?>
-<info>
+<info xmlns:xsi= "http://www.w3.org/2001/XMLSchema-instance"
+	  xsi:noNamespaceSchemaLocation="https://apps.nextcloud.com/schema/apps/info.xsd">
 	<id>user_external</id>
 	<name>External user support</name>
 	<summary>Use external user authentication methods like IMAP, SMB and FTP</summary>
@@ -7,6 +8,10 @@
 	<version>0.5.0</version>
 	<licence>agpl</licence>
 	<author>Robin Appelman</author>
+	<types>
+		<prelogin/>
+		<authentication/>
+	</types>
 	<documentation>
 		<admin>https://docs.nextcloud.com/server/15/admin_manual/configuration_user/user_auth_ftp_smb_imap.html</admin>
 	</documentation>
@@ -18,8 +23,4 @@
 	<dependencies>
 		<nextcloud min-version="15" max-version="15" />
 	</dependencies>
-	<types>
-		<authentication/>
-		<prelogin/>
-	</types>
 </info>
