@@ -52,39 +52,21 @@ class OC_User_IMAP extends \OCA\user_external\Base {
 			$uid = str_replace("%40","@",$uid);
 		}
 
-		$query = \OC::$server->getDatabaseConnection()->getQueryBuilder();
-		$query->select('userid')
-			->from('preferences')
-			->where($query->expr()->eq('appid', $query->createNamedParameter('settings')))
-			->andWhere($query->expr()->eq('configkey', $query->createNamedParameter('email')))
-			->andWhere($query->expr()->eq('configvalue', $query->createNamedParameter($uid)));
-		$result = $query->execute();
-
-		$users = [];
-		while ($row = $result->fetch()) {
-			$users[] = $row['userid'];
-		}
-		$result->closeCursor();
-
-		if(count($users) === 1) {
+		if ($this->domain !== '') {
+			$pieces = explode('@', $uid);
+			if (count($pieces) === 1) {
+				$username = $uid . '@' . $this->domain;
+			} else if(count($pieces) === 2 && $pieces[1] === $this->domain) {
+				$username = $uid;
+				$uid = $pieces[0];
+			} else {
+				return false;
+			}
+		} else {
 			$username = $uid;
-			$uid = $users[0];
- 		// Check if we only want logins from ONE domain and strip the domain part from UID
-		}elseif($this->domain !== '') {
- 			$pieces = explode('@', $uid);
- 			if(count($pieces) === 1) {
- 				$username = $uid . "@" . $this->domain;
- 			}elseif((count($pieces) === 2) && ($pieces[1] === $this->domain)) {
- 				$username = $uid;
- 				$uid = $pieces[0];
- 			}else{
- 				return false;
- 			}
- 		}else{
- 			$username = $uid;
  		}
 
- 		$mbox = @imap_open($this->mailbox, $username, $password, OP_HALFOPEN, 1);
+		$mbox = @imap_open($this->mailbox, $username, $password, OP_HALFOPEN, 1);
 		imap_errors();
 		imap_alerts();
 		if($mbox !== false) {
