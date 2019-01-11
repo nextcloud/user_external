@@ -39,10 +39,11 @@ abstract class Base extends \OC\User\Backend{
 	 * @return bool
 	 */
 	public function deleteUser($uid) {
-		\OC::$server->getDatabaseConnection()->executeQuery(
-			'DELETE FROM `*PREFIX*users_external` WHERE `uid` = ? AND `backend` = ?',
-			array($uid, $this->backend)
-		);
+		$query = \OC::$server->getDatabaseConnection()->getQueryBuilder();
+		$query->delete('users_external')
+			->where($query->expr()->eq('uid', $query->createNamedParameter($uid)))
+			->andWhere($query->expr()->eq('backend', $query->createNamedParameter($this->backend)));
+		$query->execute();
 		return true;
 	}
 
@@ -54,11 +55,15 @@ abstract class Base extends \OC\User\Backend{
 	 * @return string display name
 	 */
 	public function getDisplayName($uid) {
-		$user = \OC::$server->getDatabaseConnection()->executeQuery(
-			'SELECT `displayname` FROM `*PREFIX*users_external`'
-			. ' WHERE `uid` = ? AND `backend` = ?',
-			array($uid, $this->backend)
-		)->fetch();
+		$query = \OC::$server->getDatabaseConnection()->getQueryBuilder();
+		$query->select('displayname')
+			->from('users_external')
+			->where($query->expr()->eq('uid', $query->createNamedParameter($uid)))
+			->andWhere($query->expr()->eq('backend', $query->createNamedParameter($this->backend)));
+		$result = $query->execute();
+		$user = $result->fetch();
+		$result->closeCursor();
+
 		$displayName = trim($user['displayname'], ' ');
 		if (!empty($displayName)) {
 			return $displayName;
@@ -73,19 +78,27 @@ abstract class Base extends \OC\User\Backend{
 	 * @return array with all displayNames (value) and the corresponding uids (key)
 	 */
 	public function getDisplayNames($search = '', $limit = null, $offset = null) {
-		$stmt = \OC::$server->getDatabaseConnection()->prepare(
-			'SELECT `uid`, `displayname` FROM `*PREFIX*users_external`'
-			. ' WHERE (LOWER(`displayname`) LIKE LOWER(?) '
-			. ' OR LOWER(`uid`) LIKE LOWER(?)) AND `backend` = ?',
-			$limit, $offset
-		);
 
-		$stmt->execute(['%' . $search . '%', '%' . $search . '%', $this->backend]);
+		$connection = \OC::$server->getDatabaseConnection();
+		$query = $connection->getQueryBuilder();
+		$query->select('uid', 'displayname')
+			->from('users_external')
+			->where($query->expr()->iLike('displayname', $query->createNamedParameter('%' . $connection->escapeLikeParameter($search) . '%')))
+			->andWhere($query->expr()->iLike('uid', $query->createNamedParameter('%' . $connection->escapeLikeParameter($search) . '%')))
+			->andWhere($query->expr()->eq('backend', $query->createNamedParameter($this->backend)));
+		if ($limit) {
+			$query->setMaxResults($limit);
+		}
+		if ($offset) {
+			$query->setFirstResult($offset);
+		}
+		$result = $query->execute();
 
-		$displayNames = array();
-		while ($row = $stmt->fetch()) {
+		$displayNames = [];
+		while ($row = $result->fetch()) {
 			$displayNames[$row['uid']] = $row['displayname'];
 		}
+		$result->closeCursor();
 
 		return $displayNames;
 	}
@@ -96,18 +109,26 @@ abstract class Base extends \OC\User\Backend{
 	* @return array with all uids
 	*/
 	public function getUsers($search = '', $limit = null, $offset = null) {
-		$stmt = \OC::$server->getDatabaseConnection()->prepare(
-			'SELECT `uid` FROM `*PREFIX*users_external`'
-				. ' WHERE LOWER(`uid`) LIKE LOWER(?) AND `backend` = ?',
-			$limit, $offset
-		);
+		$connection = \OC::$server->getDatabaseConnection();
+		$query = $connection->getQueryBuilder();
+		$query->select('uid')
+			->from('users_external')
+			->where($query->expr()->iLike('uid', $query->createNamedParameter($connection->escapeLikeParameter($search) . '%')))
+			->andWhere($query->expr()->eq('backend', $query->createNamedParameter($this->backend)));
+		if ($limit) {
+			$query->setMaxResults($limit);
+		}
+		if ($offset) {
+			$query->setFirstResult($offset);
+		}
+		$result = $query->execute();
 
-		$stmt->execute([$search . '%', $this->backend]);
-
-		$users = array();
-		while ($row = $stmt->fetch()) {
+		$users = [];
+		while ($row = $result->fetch()) {
 			$users[] = $row['uid'];
 		}
+		$result->closeCursor();
+
 		return $users;
 	}
 
@@ -132,11 +153,14 @@ abstract class Base extends \OC\User\Backend{
 		if (!$this->userExists($uid)) {
 			return false;
 		}
-		\OC::$server->getDatabaseConnection()->executeQuery(
-			'UPDATE `*PREFIX*users_external` SET `displayname` = ?'
-			. ' WHERE LOWER(`uid`) = ? AND `backend` = ?',
-			array($displayName, $uid, $this->backend)
-		);
+
+		$query = \OC::$server->getDatabaseConnection()->getQueryBuilder();
+		$query->update('users_external')
+			->set('displayname', $query->createNamedParameter($displayName))
+			->where($query->expr()->eq('uid', $query->createNamedParameter($uid)))
+			->andWhere($query->expr()->eq('backend', $query->createNamedParameter($this->backend)));
+		$query->execute();
+
 		return true;
 	}
 
@@ -150,11 +174,14 @@ abstract class Base extends \OC\User\Backend{
 	protected function storeUser($uid)
 	{
 		if (!$this->userExists($uid)) {
-			\OC::$server->getDatabaseConnection()->executeQuery(
-				'INSERT INTO `*PREFIX*users_external` ( `uid`, `backend` )'
-				. ' VALUES( ?, ? )',
-				array($uid, $this->backend)
-			);
+
+			$query = \OC::$server->getDatabaseConnection()->getQueryBuilder();
+			$query->insert('users_external')
+				->values([
+					'uid' => $query->createNamedParameter($uid),
+					'backend' => $query->createNamedParameter($this->backend),
+				]);
+			$query->execute();
 		}
 	}
 
@@ -166,11 +193,16 @@ abstract class Base extends \OC\User\Backend{
 	 * @return boolean
 	 */
 	public function userExists($uid) {
-		$result = \OC::$server->getDatabaseConnection()->executeQuery(
-			'SELECT COUNT(*) FROM `*PREFIX*users_external`'
-			. ' WHERE LOWER(`uid`) = LOWER(?) AND `backend` = ?',
-			array($uid, $this->backend)
-		);
-		return $result->fetch() > 0;
+		$connection = \OC::$server->getDatabaseConnection();
+		$query = $connection->getQueryBuilder();
+		$query->select($query->func()->count('*', 'num_users'))
+			->from('users_external')
+			->where($query->expr()->iLike('uid', $query->createNamedParameter($connection->escapeLikeParameter($uid))))
+			->andWhere($query->expr()->eq('backend', $query->createNamedParameter($this->backend)));
+		$result = $query->execute();
+		$users = $result->fetchColumn();
+		$result->closeCursor();
+
+		return $users > 0;
 	}
 }
