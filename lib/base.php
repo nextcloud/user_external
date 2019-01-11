@@ -6,7 +6,6 @@
  * See the COPYING-README file.
  */
 namespace OCA\user_external;
-use \OC_DB;
 
 /**
  * Base class for external auth implementations that stores users
@@ -74,19 +73,17 @@ abstract class Base extends \OC\User\Backend{
 	 * @return array with all displayNames (value) and the corresponding uids (key)
 	 */
 	public function getDisplayNames($search = '', $limit = null, $offset = null) {
-		$result = OC_DB::executeAudited(
-			array(
-				'sql' => 'SELECT `uid`, `displayname` FROM `*PREFIX*users_external`'
-					. ' WHERE (LOWER(`displayname`) LIKE LOWER(?) '
-					. ' OR LOWER(`uid`) LIKE LOWER(?)) AND `backend` = ?',
-				'limit'  => $limit,
-				'offset' => $offset
-			),
-			array('%' . $search . '%', '%' . $search . '%', $this->backend)
+		$stmt = \OC::$server->getDatabaseConnection()->prepare(
+			'SELECT `uid`, `displayname` FROM `*PREFIX*users_external`'
+			. ' WHERE (LOWER(`displayname`) LIKE LOWER(?) '
+			. ' OR LOWER(`uid`) LIKE LOWER(?)) AND `backend` = ?',
+			$limit, $offset
 		);
 
+		$stmt->execute(['%' . $search . '%', '%' . $search . '%', $this->backend]);
+
 		$displayNames = array();
-		while ($row = $result->fetchRow()) {
+		while ($row = $stmt->fetch()) {
 			$displayNames[$row['uid']] = $row['displayname'];
 		}
 
@@ -99,17 +96,16 @@ abstract class Base extends \OC\User\Backend{
 	* @return array with all uids
 	*/
 	public function getUsers($search = '', $limit = null, $offset = null) {
-		$result = OC_DB::executeAudited(
-			array(
-				'sql' => 'SELECT `uid` FROM `*PREFIX*users_external`'
-					. ' WHERE LOWER(`uid`) LIKE LOWER(?) AND `backend` = ?',
-				'limit' => $limit,
-				'offset' => $offset
-			),
-			array($search . '%', $this->backend)
+		$stmt = \OC::$server->getDatabaseConnection()->prepare(
+			'SELECT `uid` FROM `*PREFIX*users_external`'
+				. ' WHERE LOWER(`uid`) LIKE LOWER(?) AND `backend` = ?',
+			$limit, $offset
 		);
+
+		$stmt->execute([$search . '%', $this->backend]);
+
 		$users = array();
-		while ($row = $result->fetchRow()) {
+		while ($row = $stmt->fetch()) {
 			$users[] = $row['uid'];
 		}
 		return $users;
