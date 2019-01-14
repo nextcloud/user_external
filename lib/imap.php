@@ -42,7 +42,7 @@ class OC_User_IMAP extends \OCA\user_external\Base {
 	 */
 	public function checkPassword($uid, $password) {
 		if (!function_exists('imap_open')) {
-			OCP\Util::writeLog('user_external', 'ERROR: PHP imap extension is not installed', OCP\Util::ERROR);
+			OC::$server->getLogger()->error('ERROR: PHP imap extension is not installed', ['app' => 'user_external']);
 			return false;
 		}
 
@@ -52,44 +52,30 @@ class OC_User_IMAP extends \OCA\user_external\Base {
 			$uid = str_replace("%40","@",$uid);
 		}
 
-                $result = OC_DB::executeAudited(
-                        'SELECT `userid` FROM `*PREFIX*preferences` WHERE `appid`=? AND `configkey`=? AND `configvalue`=?',
-                        array('settings','email',$uid)
-                );
-
-		$users = array();
-		while ($row = $result->fetchRow()) {
-			$users[] = $row['userid'];
-		}
-
-		if(count($users) === 1) {
+		if ($this->domain !== '') {
+			$pieces = explode('@', $uid);
+			if (count($pieces) === 1) {
+				$username = $uid . '@' . $this->domain;
+			} else if(count($pieces) === 2 && $pieces[1] === $this->domain) {
+				$username = $uid;
+				$uid = $pieces[0];
+			} else {
+				return false;
+			}
+		} else {
 			$username = $uid;
-			$uid = $users[0];
- 		// Check if we only want logins from ONE domain and strip the domain part from UID		
-		}elseif($this->domain != '') {
- 			$pieces = explode('@', $uid);
- 			if(count($pieces) == 1) {
- 				$username = $uid . "@" . $this->domain;
- 			}elseif((count($pieces) == 2) and ($pieces[1] == $this->domain)) {
- 				$username = $uid;
- 				$uid = $pieces[0];
- 			}else{
- 				return false;
- 			}
- 		}else{
- 			$username = $uid;
  		}
- 
- 		$mbox = @imap_open($this->mailbox, $username, $password, OP_HALFOPEN, 1);
+
+		$mbox = @imap_open($this->mailbox, $username, $password, OP_HALFOPEN, 1);
 		imap_errors();
 		imap_alerts();
-		if($mbox !== FALSE) {
+		if($mbox !== false) {
 			imap_close($mbox);
 			$uid = mb_strtolower($uid);
 			$this->storeUser($uid);
 			return $uid;
-		}else{
-			return false;
 		}
+
+		return false;
 	}
 }
