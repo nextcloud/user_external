@@ -131,3 +131,19 @@ Add the following to your `config.php`:
             'arguments' => array('https://example.com/webdav'),
         ),
     ),
+
+MySQL
+-----
+Authenticate Nextcloud users against an MySQL/MariaDB server.
+Server user, password, database, table, user-coloumn and password-coloumn need to be given for the Nextcloud login
+
+Add the following to your `config.php`:
+
+    'user_backends' => array(
+        array(
+            'class' => 'OC_User_MySQL',
+            'arguments' => array(
+                '127.0.0.1', 'mysql_user', 'mysql_pass', 'mysql_db', 'mysql_table', 'user_col', 'pass_col'
+            ),
+        ),
+    ),
