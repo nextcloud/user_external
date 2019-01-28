@@ -71,8 +71,8 @@ class OC_User_IMAP extends \OCA\user_external\Base {
 			'ERROR: IMAP Error: ' . print_r(imap_errors(), true),
 			['app' => 'user_external']
 		);
-		OC::$server->getLogger()->error(
-			'ERROR: IMAP Warning: ' . print_r(imap_alerts(), true),
+		OC::$server->getLogger()->warning(
+			'WARNING: IMAP Warning: ' . print_r(imap_alerts(), true),
 			['app' => 'user_external']
 		);
 		if($mbox !== false) {
