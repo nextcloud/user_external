@@ -67,8 +67,20 @@ class OC_User_IMAP extends \OCA\user_external\Base {
  		}
 
 		$mbox = @imap_open($this->mailbox, $username, $password, OP_HALFOPEN, 1);
-		imap_errors();
-		imap_alerts();
+		$imapErrors = imap_errors();
+		$imapAlerts = imap_alerts();
+		if (!empty($imapErrors)) {
+			OC::$server->getLogger()->error(
+				'ERROR: IMAP Error: ' . print_r($imapErrors, true),
+				['app' => 'user_external']
+			);
+		}
+		if (!empty($imapAlerts)) {
+			OC::$server->getLogger()->warning(
+				'WARNING: IMAP Warning: ' . print_r($imapAlerts, true),
+				['app' => 'user_external']
+			);
+		}
 		if($mbox !== false) {
 			imap_close($mbox);
 			$uid = mb_strtolower($uid);
