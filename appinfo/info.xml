@@ -3,8 +3,8 @@
 	  xsi:noNamespaceSchemaLocation="https://apps.nextcloud.com/schema/apps/info.xsd">
 	<id>user_external</id>
 	<name>External user support</name>
-	<summary>Use external user authentication methods like IMAP, SMB and FTP</summary>
-	<description>Use external user authentication methods like IMAP, SMB and FTP</description>
+	<summary>Use external user authentication methods like IMAP, SMB, FTP and XMPP</summary>
+	<description>Use external user authentication methods like IMAP, SMB, FTP and XMPP</description>
 	<version>0.5.0</version>
 	<licence>agpl</licence>
 	<author>Robin Appelman</author>
