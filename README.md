@@ -135,7 +135,7 @@ Add the following to your `config.php`:
 
 XMPP
 ----
-Authenticate Nextcloud users against an Prosody XMPP MySQL database.
+Authenticate Nextcloud users against a Prosody XMPP MySQL database.
 Prosody user and password need to be given for the Nextcloud login
 
 
