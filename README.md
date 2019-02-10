@@ -156,6 +156,7 @@ Add the following to your `config.php`:
     ),
 
 
+
 Alternatives
 ------------
 Other extensions allow connecting to external user databases directly via SQL, which may be faster:
