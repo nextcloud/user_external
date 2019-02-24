@@ -32,9 +32,9 @@ class OC_User_BasicAuth extends \OCA\user_external\Base {
 		);
 		$headers = get_headers($this->authUrl);
 
-		if($headers === false) {
+		if(!$headers) {
 			OC::$server->getLogger()->error(
-				'ERROR: Not possible to connect to BasicAuth Url: "'.$this->authUrl.'"', 
+				'ERROR: Not possible to connect to BasicAuth Url: '.$this->authUrl, 
 				['app' => 'user_external']
 			);
 			return false;

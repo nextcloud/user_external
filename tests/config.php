@@ -26,4 +26,10 @@ return array(
 		'user'=>'test',//valid username/password combination
 		'password'=>'test',
 	),
+	'basic_auth'=>array(
+		'run'=>false,
+		'url'=>'localhost/basic_auth',
+		'user'=>'test',//valid username/password combination
+		'password'=>'test',
+	),
 );

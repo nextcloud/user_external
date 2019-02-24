@@ -146,7 +146,7 @@ Add the following to your `config.php`:
 
     'user_backends' => array(
         array(
-            'class' => '\OCA\User_External\BasicAuth',
+            'class' => 'OC_User_BasicAuth',
             'arguments' => array('https://example.com/basic_auth'),
         ),
     ),
