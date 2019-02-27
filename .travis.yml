@@ -48,5 +48,5 @@ script:
   # - phpunit --configuration configuration.xml
 
   # Create coverage report
-  - sh -c "if [ '$PHP_COVERAGE' != 'FALSE' ]; then wget https://scrutinizer-ci.com/ocular.phar; fi"
-  - sh -c "if [ '$PHP_COVERAGE' != 'FALSE' ]; then php ocular.phar code-coverage:upload --format=php-clover clover.xml; fi"
+  # - sh -c "if [ '$PHP_COVERAGE' != 'FALSE' ]; then wget https://scrutinizer-ci.com/ocular.phar; fi"
+  # - sh -c "if [ '$PHP_COVERAGE' != 'FALSE' ]; then php ocular.phar code-coverage:upload --format=php-clover clover.xml; fi"
