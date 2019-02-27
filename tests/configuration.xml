@@ -1,0 +1,30 @@
+<phpunit bootstrap="bootstrap.php"
+		 verbose="true"
+		 timeoutForSmallTests="900"
+		 timeoutForMediumTests="900"
+		 timeoutForLargeTests="900"
+>
+
+	<testsuites>
+		<testsuite name="External User Authentication App Tests">
+			<directory suffix=".php">.</directory>
+			<exclude>config.php</exclude>
+		</testsuite>
+	</testsuites>
+
+	<!-- filters for code coverage -->
+	<filter>
+		<whitelist>
+			<directory suffix=".php">../../user_external</directory>
+			<exclude>
+				<directory suffix=".php">../../user_external/l10n</directory>
+				<directory suffix=".php">../../user_external/tests</directory>
+			</exclude>
+		</whitelist>
+	</filter>
+	<logging>
+		<!-- and this is where your report will be written -->
+		<log type="coverage-clover" target="./clover.xml"/>
+	</logging>
+
+</phpunit>
