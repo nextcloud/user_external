@@ -1,0 +1,8 @@
+# Mac OS
+.DS_Store
+
+# test coverage
+tests/clover.xml
+
+# packaged app
+build/artifacts
