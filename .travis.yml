@@ -44,8 +44,8 @@ script:
   # - rm info.xsd
 
   # Run phpunit tests
-  - cd tests
-  - phpunit --configuration configuration.xml
+  # - cd tests
+  # - phpunit --configuration configuration.xml
 
   # Create coverage report
   - sh -c "if [ '$PHP_COVERAGE' != 'FALSE' ]; then wget https://scrutinizer-ci.com/ocular.phar; fi"
