@@ -133,6 +133,27 @@ Add the following to your `config.php`:
     ),
 
 
+BasicAuth
+------
+
+Authenticate users by an [HTTP Basic access authentication][1]  call. 
+HTTP server of your choice to authenticate. It should return HTTP 2xx for correct credentials and an appropriate other error code for wrong ones or refused access.
+
+### Configuration
+The only supported parameter is the URL of the web server where the authentication happens.
+
+Add the following to your `config.php`:
+
+    'user_backends' => array(
+        array(
+            'class' => 'OC_User_BasicAuth',
+            'arguments' => array('https://example.com/basic_auth'),
+        ),
+    ),
+
+
+[1]: https://en.wikipedia.org/wiki/Basic_access_authentication
+
 Alternatives
 ------------
 Other extensions allow connecting to external user databases directly via SQL, which may be faster:
