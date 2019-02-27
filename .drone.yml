@@ -26,4 +26,4 @@ pipeline:
 
 matrix:
   include:
-    # - TESTS: check-app-compatbility
+     - TESTS: check-app-compatbility
