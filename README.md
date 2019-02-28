@@ -46,10 +46,10 @@ To enable SSL connections via `ftps`, append a second parameter `true`:
 ### Dependencies
 PHP automatically contains basic FTP support.
 
-For SSL-secured FTP connections via ftps, the PHP [openssl extension][0]
+For SSL-secured FTP connections via ftps, the PHP [openssl extension][FTP_0]
 needs to be activated.
 
-[0]: http://php.net/openssl
+[FTP_0]: http://php.net/openssl
 
 
 
@@ -72,21 +72,21 @@ Add the following to your `config.php`:
     ),
 
 This connects to the IMAP server on IP `127.0.0.1`, in readonly mode.
-If a domain name (e.g. example.com) is specified, then this makes sure that 
+If a domain name (e.g. example.com) is specified, then this makes sure that
 only users from this domain will be allowed to login. After successfull
 login the domain part will be striped and the rest used as username in
 NextCloud. e.g. 'username@example.com' will be 'username' in NextCloud.
 
-Read the [imap_open][0] PHP manual page to learn more about the allowed
+Read the [imap_open][IMAP_0] PHP manual page to learn more about the allowed
 parameters.
 
-[0]: http://php.net/imap_open#refsect1-function.imap-open-parameters
+[IMAP_0]: http://php.net/imap_open#refsect1-function.imap-open-parameters
 
 
 ### Dependencies
-The PHP [IMAP extension][1] has to be activated.
+The PHP [IMAP extension][IMAP_1] has to be activated.
 
-[1]: http://php.net/imap
+[IMAP_1]: http://php.net/imap
 
 
 
@@ -136,7 +136,7 @@ Add the following to your `config.php`:
 BasicAuth
 ------
 
-Authenticate users by an [HTTP Basic access authentication][1]  call. 
+Authenticate users by an [HTTP Basic access authentication][BasicAuth_0]  call.
 HTTP server of your choice to authenticate. It should return HTTP 2xx for correct credentials and an appropriate other error code for wrong ones or refused access.
 
 ### Configuration
@@ -152,7 +152,7 @@ Add the following to your `config.php`:
     ),
 
 
-[1]: https://en.wikipedia.org/wiki/Basic_access_authentication
+[BasicAuth_0]: https://en.wikipedia.org/wiki/Basic_access_authentication
 
 Alternatives
 ------------
