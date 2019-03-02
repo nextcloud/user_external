@@ -5,7 +5,7 @@
 	<name>External user support</name>
 	<summary>Use external user authentication methods like IMAP, SMB and FTP</summary>
 	<description>Use external user authentication methods like IMAP, SMB and FTP</description>
-	<version>0.5.1</version>
+	<version>0.6.0-dev</version>
 	<licence>agpl</licence>
 	<author>Robin Appelman</author>
 	<types>
@@ -21,6 +21,6 @@
 	<bugs>https://github.com/nextcloud/user_external/issues</bugs>
 	<repository type="git">https://github.com/nextcloud/user_external.git</repository>
 	<dependencies>
-		<nextcloud min-version="15" max-version="15" />
+		<nextcloud min-version="15" max-version="16" />
 	</dependencies>
 </info>
