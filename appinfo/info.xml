@@ -8,6 +8,7 @@
 	<version>0.6.0-dev</version>
 	<licence>agpl</licence>
 	<author>Robin Appelman</author>
+	<namespace>user_external</namespace>
 	<types>
 		<prelogin/>
 		<authentication/>
@@ -23,4 +24,8 @@
 	<dependencies>
 		<nextcloud min-version="15" max-version="16" />
 	</dependencies>
+	<settings>
+		<admin>OCA\user_external\Settings\Admin</admin>
+		<admin-section>OCA\user_external\Settings\Section</admin-section>
+	</settings>
 </info>
