@@ -160,3 +160,23 @@ Other extensions allow connecting to external user databases directly via SQL, w
 
 * [user_sql](https://github.com/nextcloud/user_sql)
 * [user_backend_sql_raw](https://github.com/PanCakeConnaisseur/user_backend_sql_raw)
+
+
+## Build Setup
+
+``` bash
+# install dependencies
+make dev-setup
+
+# build for development
+make build-js
+
+# build for development and watch edits
+make watch-js
+
+# build for production with minification
+make build-js-production
+
+# clean output files
+make clean
+```
