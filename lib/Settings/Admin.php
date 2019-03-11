@@ -51,7 +51,7 @@ class Admin implements ISettings {
 	public function getForm() {
 
     $serverData = [
-      // source Server Data here
+			'user_backends' => $this->config->getSystemValue(user_backends)
     ];
 
 		return new TemplateResponse('user_external', 'admin', ['serverData' => $serverData]);
