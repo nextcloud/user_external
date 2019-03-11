@@ -34,7 +34,9 @@ Eg. FTP or IMAP or is it a general problem?
 
 ### Server configuration
 
-**Operating system**:
+**User External App version:** (see Nextcloud apps page)
+
+**Operating system:**
 
 **Web server:**
 
