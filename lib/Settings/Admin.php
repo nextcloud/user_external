@@ -60,7 +60,7 @@ class Admin implements ISettings {
 	 * @return string the section ID, e.g. 'sharing'
 	 */
 	public function getSection() {
-		return 'user_external';
+		return 'server';
 	}
 	/**
 	 * @return int whether the form should be rather on the top or bottom of
@@ -70,6 +70,6 @@ class Admin implements ISettings {
 	 * keep the server setting at the top, right after "server settings"
 	 */
 	public function getPriority() {
-		return 0;
+		return 20;
 	}
 }
