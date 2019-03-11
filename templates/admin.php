@@ -23,7 +23,7 @@
 
 
 script('user_external', 'user-external');
-style('user_external', 'admin');
+style('user_external', 'user-external');
 ?>
 
 <span id="serverData" data-server="<?php p(json_encode($_['serverData']));?>"></span>

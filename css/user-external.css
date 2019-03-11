@@ -1,0 +1,4 @@
+#userExternal td > input,
+#userExternal td > select {
+    width: 100%;
+}
