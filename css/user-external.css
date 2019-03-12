@@ -1,4 +1,10 @@
 #userExternal td > input,
+#userExternal td > span > input,
 #userExternal td > select {
     width: 100%;
+}
+
+#centertext {
+  display: inline-flex;
+  align-items: center;
 }
