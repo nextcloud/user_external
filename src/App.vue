@@ -137,7 +137,25 @@ export default {
 
 	},
 	methods: {
+		/**
+		 *
+		 *
+		 * @param {string} type type of the change (font or theme)
+		 * @param {string} id the data of the change
+		 */
+		updateBackend(type, id) {
+			axios.post(
+					OC.linkToOCS('apps/user_external/api/v1/config', 2) + type,
+					{ value: id }
+				)
+				.then(response => {
 
+				})
+				.catch(err => {
+					console.log(err, err.response);
+					OC.Notification.showTemporary(t('user_external', err.response.data.ocs.meta.message + '. Unable to apply the setting.'));
+				});
+		}
 
 	}
 };
