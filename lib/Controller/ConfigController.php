@@ -46,7 +46,7 @@ class ConfigController extends OCSController {
 	 */
 	public function __construct(string $appName,
 								IRequest $request,
-								IConfig $config, {
+								IConfig $config) {
 		parent::__construct($appName, $request);
 		$this->appName               = $appName;
 		$this->config                = $config;
@@ -71,4 +71,5 @@ class ConfigController extends OCSController {
 	 */
 	public function setConfig(string $key, $value): DataResponse {
 
+  }
 }
