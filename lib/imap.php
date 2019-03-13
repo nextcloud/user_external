@@ -6,6 +6,8 @@
  * See the COPYING-README file.
  */
 
+use OCA\user_external\imap\imap_rcube;
+
 /**
  * User authentication against an IMAP mail server
  *
@@ -66,7 +68,10 @@ class OC_User_IMAP extends \OCA\user_external\Base {
 			$username = $uid;
  		}
 
-		$mbox = @imap_open($this->mailbox, $username, $password, OP_HALFOPEN, 1);
+		$rcube = new imap_rcube();
+		$canconnect = $rcube->connect($this->mailbox, $username, $password, ["port"=>993, "ssl_mode"=>"tls", "timeout"=>10]);
+
+		/*$mbox = @imap_open($this->mailbox, $username, $password, OP_HALFOPEN, 1);
 		$imapErrors = imap_errors();
 		$imapAlerts = imap_alerts();
 		if (!empty($imapErrors)) {
@@ -80,14 +85,13 @@ class OC_User_IMAP extends \OCA\user_external\Base {
 				'WARNING: IMAP Warning: ' . print_r($imapAlerts, true),
 				['app' => 'user_external']
 			);
-		}
-		if($mbox !== false) {
-			imap_close($mbox);
+		}*/
+
+		if($canconnect) {
 			$uid = mb_strtolower($uid);
 			$this->storeUser($uid);
 			return $uid;
 		}
-
 		return false;
 	}
 }
