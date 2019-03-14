@@ -77,7 +77,7 @@ The default port is 143; however if you want to restrict the domain, you need to
 If a domain name (e.g. example.com) is specified, then this makes sure that
 only users from this domain will be allowed to login. After successfull
 login the domain part will be striped and the rest used as username in
-NextCloud. e.g. 'username@example.com' will be 'username' in NextCloud.
+Nextcloud. e.g. 'username@example.com' will be 'username' in Nextcloud.
 
 
 
