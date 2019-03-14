@@ -22,7 +22,7 @@
 <template>
   <tr :data-id="user_backend.id">
     <td>
-      {{ user_backend['class'] }}
+      {{ backendName }}
     </td>
     <td>
       {{ t('user_external', 'Backend Server Domain/URL/IP:') }}<br>
@@ -70,13 +70,12 @@
               {{ t('user_external', 'Use secure ftps instead of plain ftp.') }}
       </span>
     </td>
-    <td class="save"><div class="icon-checkmark" title="Save"></div></td>
+    <td class="save"><a v-tooltip.bottom="t('social', 'Delete')" class="icon-delete" @click.prevent="deleteBackend" /></td>
   </tr>
 </template>
 
 <script>
-
-
+  import tooltip from 'nextcloud-vue/dist/Directives/Tooltip';
   export default {
     name: 'BackendEntry',
     props: {
@@ -85,12 +84,52 @@
         required: true,
       }
     },
+    directives: {
+      tooltip
+    },
     computed: {
+      backendName () {
+        switch (this.user_backend['class']) {
+          case 'OC_User_FTP':
+            return 'FTP(S)';
+            break;
+          case 'OC_User_IMAP':
+            return 'IMAP';
+            break;
+          case 'OC_User_SMB':
+            return 'SMB/Samba';
+            break;
+          case '\OCA\User_External\WebDAVAuth':
+            return 'WebDAV';
+            break;
+          case 'OC_User_BasicAuth':
+            return 'HTTP(S) Basic Auth';
+            break;
+          default:
+            return 'unknown';
+        }
+      }
 
     },
     methods: {
+      cancelRename () {
 
+      },
+      deleteBackend (user_backend) {
+        // Just pass it on
+        this.$emit('deleteBackend', user_backend);
+      }
     }
   }
 
 </script>
+
+<style lang="scss" scoped>
+  .icon-delete {
+    display: inline-block;
+    opacity: .5;
+    &:hover, &:focus {
+      opacity: 1;
+    }
+  }
+</style>

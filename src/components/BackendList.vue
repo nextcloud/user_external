@@ -35,7 +35,7 @@
                   :key="user_backend.id"
                   :user_backend="user_backend"
                   @rename="rename"
-                  @delete="onDelete"/>
+                  @deleteBackend="deleteBackend"/>
       </tbody>
     </table>
   </form>
@@ -57,72 +57,15 @@
       },
     },
     computed: {
-      userBackendNames() {
-        this.user_backends = [];
-        for (var i in this.serverData.user_backends) {
-          this.user_backends.push(this.serverData.user_backends[i]["class"]);
-        }
-        return this.user_backends;
-      },
-      backendNamesShort() {
-  			this.backendsShort = [];
-  			for (var i in this.userBackendNames) {
-  				switch (this.userBackendNames[i]) {
-  				  case "OC_User_FTP":
-  				    this.backendsShort.push("ftp");
-  				    break;
-  				  case "OC_User_IMAP":
-  				    this.backendsShort.push("imap");
-  				    break;
-  				  case "OC_User_SMB":
-  				    this.backendsShort.push("smb");
-  				    break;
-  				  case "\OCA\User_External\WebDAVAuth":
-  				    this.backendsShort.push("dav");
-  				    break;
-  				  case "OC_User_BasicAuth":
-  				    this.backendsShort.push("basic_auth");
-  						break;
-  					default:
-  						this.backendsShort.push("unknown");
-  				}
-  			}
-  			return this.backendsShort;
-  		},
-  		backendNamesReadable() {
-  			this.backendsReadable = [];
-  			for (var i in this.backendNamesShort) {
-  				switch (this.backendNamesShort[i]) {
-  				  case "ftp":
-  				    this.backendsReadable.push("FTP(S)");
-  				    break;
-  				  case "imap":
-  				    this.backendsReadable.push("IMAP");
-  				    break;
-  				  case "smb":
-  				    this.backendsReadable.push("SMB/Samba");
-  				    break;
-  				  case "dav":
-  				    this.backendsReadable.push("WebDAV");
-  				    break;
-  				  case "basic_auth":
-  				    this.backendsReadable.push("HTTP(S) Basic Auth");
-  						break;
-  					default:
-  						this.backendsReadable.push("unknown");
-  				}
-  			}
-  			return this.backendsReadable;
-  		}
 
     },
     methods: {
       rename (user_backend, newName) {
         this.$emit('rename', token, newName);
       },
-      onDelete (token) {
+      deleteBackend (user_backend) {
         // Just pass it on
-        this.$emit('delete', token);
+        this.$emit('deleteBackend', user_backend);
       }
 
     }

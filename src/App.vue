@@ -28,10 +28,13 @@
 
   	<div id="user-external-save-indicator" class="msg success inlineblock" style="display: none;">{{t('user_external', 'Saved')}}</div>
 
-		<BackendList :user_backends="user_backends"
+		<BackendList :user_backends="serverData.user_backends"
 
 
 						/>
+		<BackendSetupDialogue :add="postAddBackend"
+													@addBackend="addBackend"
+													@deleteBackend="deleteBackend" />
 
 	</div>
 </template>
@@ -40,11 +43,13 @@
 import axios from 'nextcloud-axios';
 
 import BackendList from './components/BackendList.vue';
+import BackendSetupDialogue from './components/BackendSetupDialogue';
 
 export default {
 	name: 'user_external',
 	components: {
-		BackendList
+		BackendList,
+		BackendSetupDialogue
 	},
 	beforeMount() {
 		// importing server data into the app
@@ -60,20 +65,17 @@ export default {
 			serverData: [],
 		};
 	},
-	computed: {
-		user_backends() {
-			return this.serverData.user_backends;
-		}
-
-	},
 	methods: {
+		updateBackend() {
+
+		},
 		/**
 		 *
 		 *
 		 * @param {string} type type of the change (font or theme)
 		 * @param {string} id the data of the change
 		 */
-		updateBackend(type, id) {
+		postUpdateBackend(type, id) {
 			axios.post(
 					OC.linkToOCS('apps/user_external/api/v1/config', 2) + type,
 					{ value: id }
@@ -85,7 +87,39 @@ export default {
 					console.log(err, err.response);
 					OC.Notification.showTemporary(t('user_external', err.response.data.ocs.meta.message + '. Unable to apply the setting.'));
 				});
+		},
+		addBackend(selection) {
+			switch (selection) {
+				case 'ftp':
+					selection = 'OC_User_FTP';
+					break;
+				case 'imap':
+					selection = 'OC_User_IMAP';
+					break;
+				case 'smb':
+					selection = 'OC_User_SMB';
+					break;
+				case 'dav':
+					selection = '\OCA\User_External\WebDAVAuth';
+					break;
+				case 'basic_auth':
+					selection = 'OC_User_BasicAuth';
+					break;
+				default:
+					selection = 'unknown';
+			}
+			this.serverData.user_backends.push({ 'class': selection, 'arguments': '' });
+		},
+		postAddBackend(){
+
+		},
+		deleteBackend(user_backend) {
+			this.serverData.user_backends.pop(user_backend)
+		},
+		postDeleteBackend(){
+
 		}
+
 
 	}
 };
