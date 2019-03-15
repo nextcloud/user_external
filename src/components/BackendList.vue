@@ -35,7 +35,8 @@
                   :key="user_backend.id"
                   :user_backend="user_backend"
                   @rename="rename"
-                  @deleteBackend="deleteBackend"/>
+                  @deleteBackend="deleteBackend"
+                  @changeBackend="changeBackend"/>
       </tbody>
     </table>
   </form>
@@ -60,6 +61,12 @@
 
     },
     methods: {
+      changeBackend () {
+        this.$emit('changeBackend');
+      },
+      cancelChange () {
+
+      },
       rename (user_backend, newName) {
         this.$emit('rename', token, newName);
       },

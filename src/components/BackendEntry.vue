@@ -30,9 +30,9 @@
             ref="url"
             v-model="user_backend['arguments'][0]"
             placeholder="URL"
-            @keyup.enter="rename"
-            @blur="cancelRename"
-            @keyup.esc="cancelRename">
+            @keyup.enter="changeBackend"
+            @blur="cancelChange"
+            @keyup.esc="cancelChange">
     </td>
     <td>
       <span v-if="user_backend['class'] === 'OC_User_IMAP'">
@@ -41,25 +41,25 @@
               ref="port"
               v-model="user_backend['arguments'][1]"
               placeholder=""
-              @keyup.enter="rename"
-              @blur="cancelRename"
-              @keyup.esc="cancelRename"><br>
+              @keyup.enter="changeBackend"
+              @blur="cancelChange"
+              @keyup.esc="cancelChange"><br>
         {{ t('user_external', 'Sslmode:') }}<br>
         <input type="text"
               ref="sslmode"
               v-model="user_backend['arguments'][2]"
               placeholder=""
-              @keyup.enter="rename"
-              @blur="cancelRename"
-              @keyup.esc="cancelRename"><br>
+              @keyup.enter="changeBackend"
+              @blur="cancelChange"
+              @keyup.esc="cancelChange"><br>
         {{ t('user_external', 'Restrict login to a specific e-mail domain:') }}<br>
         <input type="text"
               ref="sslmode"
               v-model="user_backend['arguments'][3]"
               placeholder=""
-              @keyup.enter="rename"
-              @blur="cancelRename"
-              @keyup.esc="cancelRename">
+              @keyup.enter="changeBackend"
+              @blur="cancelChange"
+              @keyup.esc="cancelChange">
       </span>
       <span v-if="user_backend['class'] === 'OC_User_FTP'" id="centertext">
         <input type="checkbox"
@@ -112,7 +112,10 @@
 
     },
     methods: {
-      cancelRename () {
+      changeBackend () {
+        this.$emit('changeBackend');
+      },
+      cancelChange () {
 
       },
       deleteBackend () {

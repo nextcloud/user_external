@@ -30,7 +30,8 @@
 
 		<BackendList :user_backends="serverData.user_backends"
 								@deleteBackend="deleteBackend"
-						/>
+								@changeBackend="changeBackend" />
+
 		<BackendSetupDialogue :add="postAddBackend"
 													@addBackend="addBackend" />
 
@@ -73,6 +74,18 @@ export default {
 		};
 	},
 	methods: {
+		changeBackend () {
+			return axios.put(this.baseUrl + '/api/v1/config', {config: this.serverData.user_backends})
+				.then(resp => resp.data)
+				.then(tap(() => console.debug('user backends changed')))
+				.catch(err => {
+					console.error.bind('could not change backend', err);
+					OC.Notification.showTemporary(t('core', 'Error while changing the user backend'));
+				})
+		},
+		cancelChange () {
+
+		},
 		updateBackend() {
 
 		},
