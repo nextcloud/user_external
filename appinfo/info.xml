@@ -5,9 +5,10 @@
 	<name>External user support</name>
 	<summary>Use external user authentication methods like IMAP, SMB and FTP</summary>
 	<description>Use external user authentication methods like IMAP, SMB and FTP</description>
-	<version>0.6.0-dev</version>
+	<version>0.7.0-dev</version>
 	<licence>agpl</licence>
 	<author>Robin Appelman</author>
+	<author homepage="https://violoncello.ch">Jonas Sulzer</author>
 	<namespace>user_external</namespace>
 	<types>
 		<prelogin/>
