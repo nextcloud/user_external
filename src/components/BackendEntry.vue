@@ -115,9 +115,9 @@
       cancelRename () {
 
       },
-      deleteBackend (user_backend) {
+      deleteBackend () {
         // Just pass it on
-        this.$emit('deleteBackend', user_backend);
+        this.$emit('deleteBackend', this.user_backend);
       }
     }
   }

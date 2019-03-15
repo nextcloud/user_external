@@ -112,7 +112,8 @@ export default {
 
 		},
 		deleteBackend(user_backend) {
-			this.serverData.user_backends.pop(user_backend)
+			this.serverData.user_backends = this.serverData.user_backends.filter(t => t !== user_backend);
+
 		},
 		postDeleteBackend(){
 
