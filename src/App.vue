@@ -29,12 +29,10 @@
   	<div id="user-external-save-indicator" class="msg success inlineblock" style="display: none;">{{t('user_external', 'Saved')}}</div>
 
 		<BackendList :user_backends="serverData.user_backends"
-
-
+								@deleteBackend="deleteBackend"
 						/>
 		<BackendSetupDialogue :add="postAddBackend"
-													@addBackend="addBackend"
-													@deleteBackend="deleteBackend" />
+													@addBackend="addBackend" />
 
 	</div>
 </template>
