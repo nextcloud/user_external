@@ -6,3 +6,7 @@ tests/clover.xml
 
 # packaged app
 build/artifacts
+
+node_modules
+
+js
