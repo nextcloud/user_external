@@ -29,8 +29,8 @@ return [
     ],
   	[
   		'name' => 'Config#setConfig',
-  		'url'  => '/api/v1/config/{key}',
-  		'verb' => 'POST',
+  		'url'  => '/api/v1/config',
+  		'verb' => 'PUT',
   	],
   ],
 ];

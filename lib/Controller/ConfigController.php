@@ -23,12 +23,11 @@ declare (strict_types = 1);
  */
 namespace OCA\user_external\Controller;
 use OCP\AppFramework\Http;
-use OCP\AppFramework\Http\DataResponse;
-use OCP\AppFramework\OCSController;
-use OCP\AppFramework\OCS\OCSBadRequestException;
+use OCP\AppFramework\Http\JSONResponse;
+use OCP\AppFramework\Controller;
 use OCP\IConfig;
 use OCP\IRequest;
-class ConfigController extends OCSController {
+class ConfigController extends Controller {
 	/** @var string */
 	protected $appName;
 	/** @var string */
@@ -54,22 +53,26 @@ class ConfigController extends OCSController {
 	/**
 	 * Get user_external config
 	 *
-	 * @param string $key
-	 * @return DataResponse
+	 * @return JSONResponse
 	 */
-	public function getConfig(): DataResponse {
-		return new DataResponse([
+	public function getConfig(): JSONResponse {
+		return new JSONResponse([
 			'user_backends' => $this->config->getSystemValue(user_backends)
 		]);
 	}
 	/**
 	 * Set user_external config
 	 *
-	 * @param string $key
-	 * @return DataResponse
+	 * @param array $config
+	 * @return JSONResponse
 	 * @throws Exception
 	 */
-	public function setConfig(string $key, $value): DataResponse {
+	public function setConfig(array $config): JSONResponse {
+		$this->config->setSystemValue('user_backends', $config);
+
+		return new JSONResponse([
+			null
+		]);
 
   }
 }

@@ -123,9 +123,9 @@ export default {
 		deleteBackend(user_backend) {
 			this.serverData.user_backends = this.serverData.user_backends.filter(t => t !== user_backend);
 
-			return axios.delete(this.baseUrl + '/api/v1/config/' + user_backend.id)
+			return axios.put(this.baseUrl + '/api/v1/config', {config: this.serverData.user_backends})
 				.then(resp => resp.data)
-				.then(tap(() => console.debug('user backend deleted')))
+				.then(tap(() => console.debug('user backends updated')))
 				.catch(err => {
 					console.error.bind('could not delete backend', err);
 					OC.Notification.showTemporary(t('core', 'Error while deleting the user backend'));
@@ -133,9 +133,6 @@ export default {
 					// Restore
 					this.serverData.user_backends.push(user_backend);
 				})
-		},
-		postDeleteBackend(){
-
 		}
 
 
