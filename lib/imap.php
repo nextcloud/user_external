@@ -6,6 +6,8 @@
  * See the COPYING-README file.
  */
 
+use OCA\user_external\imap\imap_rcube;
+
 /**
  * User authentication against an IMAP mail server
  *
@@ -17,19 +19,24 @@
  */
 class OC_User_IMAP extends \OCA\user_external\Base {
 	private $mailbox;
+	private $port;
+	private $sslmode;
 	private $domain;
 
 	/**
 	 * Create new IMAP authentication provider
 	 *
-	 * @param string $mailbox PHP imap_open mailbox definition, e.g.
-	 *                        {127.0.0.1:143/imap/readonly}
+	 * @param string $mailbox IMAP server domain/IP
+	 * @param string $port IMAP server $port
+	 * @param string $sslmode
 	 * @param string $domain  If provided, loging will be restricted to this domain
 	 */
-	public function __construct($mailbox, $domain = '') {
+	public function __construct($mailbox, $port = null, $sslmode = null, $domain = null) {
 		parent::__construct($mailbox);
-		$this->mailbox=$mailbox;
-		$this->domain=$domain;
+		$this->mailbox = $mailbox;
+		$this->port = $port === null ? 143 : $port;
+		$this->sslmode = $sslmode;
+		$this->domain= $domain === null ? '' : $domain;
 	}
 
 	/**
@@ -41,11 +48,6 @@ class OC_User_IMAP extends \OCA\user_external\Base {
 	 * @return true/false
 	 */
 	public function checkPassword($uid, $password) {
-		if (!function_exists('imap_open')) {
-			OC::$server->getLogger()->error('ERROR: PHP imap extension is not installed', ['app' => 'user_external']);
-			return false;
-		}
-
 		// Replace escaped @ symbol in uid (which is a mail address)
 		// but only if there is no @ symbol and if there is a %40 inside the uid
 		if (!(strpos($uid, '@') !== false) && (strpos($uid, '%40') !== false)) {
@@ -66,28 +68,25 @@ class OC_User_IMAP extends \OCA\user_external\Base {
 			$username = $uid;
  		}
 
-		$mbox = @imap_open($this->mailbox, $username, $password, OP_HALFOPEN, 1);
-		$imapErrors = imap_errors();
-		$imapAlerts = imap_alerts();
-		if (!empty($imapErrors)) {
-			OC::$server->getLogger()->error(
-				'ERROR: IMAP Error: ' . print_r($imapErrors, true),
-				['app' => 'user_external']
-			);
+		$rcube = new imap_rcube();
+
+		$params = ["port"=>$this->port, "timeout"=>10];
+
+		if ($this->sslmode !== null){
+			$params["ssl_mode"] = $this->sslmode;
 		}
-		if (!empty($imapAlerts)) {
-			OC::$server->getLogger()->warning(
-				'WARNING: IMAP Warning: ' . print_r($imapAlerts, true),
-				['app' => 'user_external']
-			);
-		}
-		if($mbox !== false) {
-			imap_close($mbox);
+		$canconnect = $rcube->connect(
+					$this->mailbox,
+					$username,
+					$password,
+					$params
+		);
+
+		if($canconnect) {
 			$uid = mb_strtolower($uid);
 			$this->storeUser($uid);
 			return $uid;
 		}
-
 		return false;
 	}
 }

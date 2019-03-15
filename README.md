@@ -56,37 +56,28 @@ needs to be activated.
 IMAP
 ----
 Authenticate Nextcloud users against an IMAP server.
-IMAP user and password need to be given for the Nextcloud login
+IMAP user and password need to be given for the Nextcloud login.
 
 
 ### Configuration
+The parameters are `host, port, sslmode, domain`.
 Add the following to your `config.php`:
 
     'user_backends' => array(
         array(
             'class' => 'OC_User_IMAP',
             'arguments' => array(
-                '{127.0.0.1:143/imap/readonly}', 'example.com'
+                '127.0.0.1', 993, ssl, 'example.com'
             ),
         ),
     ),
 
-This connects to the IMAP server on IP `127.0.0.1`, in readonly mode.
+This connects to the IMAP server on IP `127.0.0.1`.
+The default port is 143; however if you want to restrict the domain, you need to specify the port and set sslmode to `null`.
 If a domain name (e.g. example.com) is specified, then this makes sure that
 only users from this domain will be allowed to login. After successfull
 login the domain part will be striped and the rest used as username in
-NextCloud. e.g. 'username@example.com' will be 'username' in NextCloud.
-
-Read the [imap_open][IMAP_0] PHP manual page to learn more about the allowed
-parameters.
-
-[IMAP_0]: http://php.net/imap_open#refsect1-function.imap-open-parameters
-
-
-### Dependencies
-The PHP [IMAP extension][IMAP_1] has to be activated.
-
-[IMAP_1]: http://php.net/imap
+Nextcloud. e.g. 'username@example.com' will be 'username' in Nextcloud.
 
 
 
