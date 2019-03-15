@@ -43,6 +43,14 @@ import axios from 'nextcloud-axios';
 import BackendList from './components/BackendList.vue';
 import BackendSetupDialogue from './components/BackendSetupDialogue';
 
+/**
+ * Tap into a promise without losing the value
+ */
+	const tap = cb => val => {
+		cb(val);
+		return val;
+	};
+
 export default {
 	name: 'user_external',
 	components: {
@@ -61,6 +69,7 @@ export default {
 	data() {
 		return {
 			serverData: [],
+			baseUrl: OC.generateUrl('apps/user_external'),
 		};
 	},
 	methods: {
@@ -114,6 +123,16 @@ export default {
 		deleteBackend(user_backend) {
 			this.serverData.user_backends = this.serverData.user_backends.filter(t => t !== user_backend);
 
+			return axios.delete(this.baseUrl + '/api/v1/config/' + user_backend.id)
+				.then(resp => resp.data)
+				.then(tap(() => console.debug('user backend deleted')))
+				.catch(err => {
+					console.error.bind('could not delete backend', err);
+					OC.Notification.showTemporary(t('core', 'Error while deleting the user backend'));
+
+					// Restore
+					this.serverData.user_backends.push(user_backend);
+				})
 		},
 		postDeleteBackend(){
 

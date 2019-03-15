@@ -22,17 +22,15 @@
  */
 return [
 	'routes' => [
-    'ocs' => [
-  		[
-  			'name' => 'Config#getConfig',
-  			'url'  => '/api/v1/config',
-  			'verb' => 'GET',
-      ],
-  		[
-  			'name' => 'Config#setConfig',
-  			'url'  => '/api/v1/config/{key}',
-  			'verb' => 'POST',
-  		],
+  	[
+  		'name' => 'Config#getConfig',
+  		'url'  => '/api/v1/config',
+  		'verb' => 'GET',
     ],
+  	[
+  		'name' => 'Config#setConfig',
+  		'url'  => '/api/v1/config/{key}',
+  		'verb' => 'POST',
+  	],
   ],
 ];
