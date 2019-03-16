@@ -61,6 +61,7 @@ IMAP user and password need to be given for the Nextcloud login.
 
 ### Configuration
 The parameters are `host, port, sslmode, domain`.
+Possible values for sslmode are `ssl` or `tls`.
 Add the following to your `config.php`:
 
     'user_backends' => array(
