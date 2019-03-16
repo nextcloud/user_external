@@ -67,7 +67,7 @@ Add the following to your `config.php`:
         array(
             'class' => 'OC_User_IMAP',
             'arguments' => array(
-                '127.0.0.1', 993, ssl, 'example.com'
+                '127.0.0.1', 993, 'ssl', 'example.com'
             ),
         ),
     ),
