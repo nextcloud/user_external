@@ -13,7 +13,7 @@
 		<authentication/>
 	</types>
 	<documentation>
-		<admin>https://docs.nextcloud.com/server/15/admin_manual/configuration_user/user_auth_ftp_smb_imap.html</admin>
+		<admin>https://github.com/nextcloud/user_external#readme</admin>
 	</documentation>
 	<category>tools</category>
 	<category>integration</category>
