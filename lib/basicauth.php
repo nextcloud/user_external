@@ -30,7 +30,7 @@ class OC_User_BasicAuth extends \OCA\user_external\Base {
 		    'header' => "authorization: Basic " . base64_encode("$uid:$password")
 		  ))
 		);
-		$headers = get_headers($this->authUrl);
+		$headers = get_headers($this->authUrl, 1);
 
 		if(!$headers) {
 			OC::$server->getLogger()->error(
@@ -39,13 +39,27 @@ class OC_User_BasicAuth extends \OCA\user_external\Base {
 			);
 			return false;
 		}
-
-		$returnCode= substr($headers[0], 9, 3);
-		if(substr($returnCode, 0, 1) === '2') {
-			$this->storeUser($uid);
-			return $uid;
-		} else {
-			return false;
+		/* get_headers() follows redirects up to a maximum (default: 20)
+		 * the response code of the last request is stored in the numerically greatest item
+		 * $headers[0] is always present
+		 */
+		$responseIdx = 0;
+		foreach (array_keys($headers) as $key) {
+			if (gettype($key) === "integer" && $responseIdx < $key) {
+				$responseIdx = $key;
+			}
 		}
+		switch (substr($headers[$responseIdx], 9, 1)) {
+			case "2":
+				$this->storeUser($uid);
+				return $uid;
+			case "3":
+				OC::$server->getLogger()->error(
+					'ERROR: Too many redirects from BasicAuth Url: '.$this->authUrl, 
+					['app' => 'user_external']
+				);
+				return false;
+		}
+		return false;
 	}
 }
