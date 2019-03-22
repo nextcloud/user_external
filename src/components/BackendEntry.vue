@@ -87,6 +87,11 @@
     directives: {
       tooltip
     },
+    data() {
+      return {
+        user_backend: user_backend,
+      }
+    },
     computed: {
       backendName () {
         switch (this.user_backend['class']) {
