@@ -146,6 +146,30 @@ Add the following to your `config.php`:
 
 [BasicAuth_0]: https://en.wikipedia.org/wiki/Basic_access_authentication
 
+
+XMPP (Prosody)
+----
+Authenticate Nextcloud users against a Prosody XMPP MySQL database.
+Prosody user and password need to be given for the Nextcloud login
+
+
+### Configuration
+Add the following to your `config.php`:
+
+    'user_backends' => array (
+        0 => array (
+            'class' => 'OC_User_XMPP',
+                'arguments' => array (
+                    0 => 'dbhost',
+                    1 => 'prosodydb',
+                    2 => 'dbuser',
+                    3 => 'dbuserpassword',
+                    4 => 'xmppdomain',
+                ),
+            ),
+    ),
+
+
 Alternatives
 ------------
 Other extensions allow connecting to external user databases directly via SQL, which may be faster:
