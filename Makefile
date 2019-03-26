@@ -9,7 +9,7 @@ package_name=$(app_name)
 cert_dir=$(HOME)/.nextcloud/certificates
 github_account=nextcloud
 branch=master
-version+=0.5.1
+version+=0.6.1
 
 
 # Cleaning

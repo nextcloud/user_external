@@ -5,7 +5,7 @@
 	<name>External user support</name>
 	<summary>Use external user authentication methods like IMAP, SMB, FTP, WebDAV, HTTP BasicAuth and XMPP</summary>
 	<description>Use external user authentication methods like IMAP, SMB, FTP, WebDAV, HTTP BasicAuth and XMPP</description>
-	<version>0.6.0</version>
+	<version>0.6.1</version>
 	<licence>agpl</licence>
 	<author>Robin Appelman</author>
 	<types>
