@@ -134,6 +134,8 @@ HTTP server of your choice to authenticate. It should return HTTP 2xx for correc
 ### Configuration
 The only supported parameter is the URL of the web server where the authentication happens.
 
+**⚠⚠ Warning:** make sure to use the URL of a correctly configured HTTP Basic authenticating server. If the server always responds with a HTTP 2xx response without validating the users, this would allow anyone to log in to your Nextcloud instance with **any username / password combination**. ⚠⚠
+
 Add the following to your `config.php`:
 
     'user_backends' => array(
