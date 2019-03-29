@@ -128,7 +128,7 @@ export default {
 				default:
 					selection = 'unknown';
 			}
-			this.serverData.user_backends.push({ 'class': selection, 'arguments': '' });
+			this.serverData.user_backends.push({ 'class': selection, 'arguments': {} });
 		},
 		postAddBackend(){
 
