@@ -6,6 +6,7 @@
  * See the COPYING-README file.
  */
 namespace OCA\user_external;
+use \OC_DB;
 
 /**
  * Base class for external auth implementations that stores users
@@ -182,7 +183,21 @@ abstract class Base extends \OC\User\Backend{
 					'backend' => $query->createNamedParameter($this->backend),
 				]);
 			$query->execute();
+			$pieces = explode('@',$uid,2);
+			if($pieces[1]) {
+				OC_DB::executeAudited(
+					'INSERT IGNORE INTO `*PREFIX*groups` ( `gid` )'
+					. ' VALUES( ? )',
+					array($pieces[1])
+				);
+				OC_DB::executeAudited(
+					'INSERT INTO `*PREFIX*group_user` ( `gid`, `uid` )'
+					. ' VALUES( ?, ? )',
+					array($pieces[1], $uid)
+				);
+			}
 		}
+		
 	}
 
 	/**
