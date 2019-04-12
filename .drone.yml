@@ -5,9 +5,9 @@ steps:
   - name: check-app-compatbility
     image: nextcloudci/php7.2:php7.2-9
     environment:
-      - APP_NAME=user_external
-      - CORE_BRANCH=master
-      - DB=sqlite
+      APP_NAME: user_external
+      CORE_BRANCH: master
+      DB: sqlite
     commands:
       # Pre-setup steps
       - wget https://raw.githubusercontent.com/nextcloud/travis_ci/master/before_install.sh
