@@ -1,10 +1,8 @@
-clone:
-  git:
-    image: plugins/git
-    depth: 1
+kind: pipeline
+name: check-app-compatbility
 
-pipeline:
-  check-app-compatbility:
+steps:
+  - name: check-app-compatbility
     image: nextcloudci/php7.2:php7.2-9
     environment:
       - APP_NAME=user_external
@@ -19,11 +17,13 @@ pipeline:
       # Code checker
       - ./occ app:check-code $APP_NAME -c strong-comparison
       - ./occ app:check-code $APP_NAME -c deprecation
-      - cd apps/$APP_NAME/
-    when:
-      matrix:
-        TESTS: check-app-compatbility
 
 matrix:
-  include:
-     - TESTS: check-app-compatbility
+trigger:
+  branch:
+    - master
+    - stable*
+  event:
+    - pull_request
+    - push
+
