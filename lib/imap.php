@@ -83,6 +83,7 @@ class OC_User_IMAP extends \OCA\user_external\Base {
 		);
 
 		if($canconnect) {
+ 			$rcube->closeConnection();
 			$uid = mb_strtolower($uid);
 			$this->storeUser($uid);
 			return $uid;
