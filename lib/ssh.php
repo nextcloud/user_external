@@ -16,18 +16,20 @@
  * @link     http://github.com/owncloud/apps
  */
 
- 
+
 class OC_User_SSH extends \OCA\user_external\Base {
 	private $host;
+  private $port;
 
 	/**
 	 * Create a new SSH authentication provider
 	 *
 	 * @param string $host Hostname or IP address of SSH servr
 	 */
-	public function __construct($host) {
+	public function __construct($host, $port = 22) {
 		parent::__construct($host);
-		$this->host =$host;
+		$this->host = $host;
+    $this->port = $port;
 	}
 
 	/**
@@ -40,7 +42,7 @@ class OC_User_SSH extends \OCA\user_external\Base {
 	 * @return true/false
 	 */
 	public function checkPassword($uid, $password) {
-		$connection = ssh2_connect($this->host);
+		$connection = ssh2_connect($this->host, $this->port);
 		if (ssh2_auth_password($connection, $uid, $password)) {
 			$this->storeUser($uid);
 			return $uid;
