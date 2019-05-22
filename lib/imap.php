@@ -54,17 +54,33 @@ class OC_User_IMAP extends \OCA\user_external\Base {
 			$uid = str_replace("%40","@",$uid);
 		}
 
+		// Check if we only want logins from given domains
 		if ($this->domain !== '') {
-			$pieces = explode('@', $uid);
-			if (count($pieces) === 1) {
-				$username = $uid . '@' . $this->domain;
-			} else if(count($pieces) === 2 && $pieces[1] === $this->domain) {
-				$username = $uid;
-				$uid = $pieces[0];
-			} else {
-				return false;
+			$domains = explode(',', $this->domain);
+			// only one domain allowed
+			if (count($domains) === 1) {
+				$pieces = explode('@', $uid);
+				if (count($pieces) === 1) {
+					$username = $uid . "@" . $this->domain;
+				} else if (count($pieces) === 2 && $pieces[1] === $this->domain) {
+					$username = $uid;
+					$uid = $pieces[0]; // strip the domain part from UID if only one domain allowed
+				} else {
+					return false; // domain within uid not the allowed domain
+				}
 			}
-		} else {
+			// more than one domain allowed
+			else if (count($domains) > 1) {
+				$domains = array_filter(array_map('trim', $domains));
+				$pieces = explode('@', $uid);
+				if (in_array($pieces[1], $domains)) {
+					$username = $uid;
+				}
+				else {
+					return false; // domain within uid not in array of allowed domains
+				}
+			}
+		} else { // no domain given at all, all domains allowed
 			$username = $uid;
  		}
 
