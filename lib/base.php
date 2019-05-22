@@ -1,6 +1,8 @@
 <?php
 /**
- * Copyright (c) 2014 Christian Weiske <cweiske@cweiske.de>
+ * @author Jonas Sulzer <jonas@violoncello.ch>
+ * @author Christian Weiske <cweiske@cweiske.de>
+ * @copyright (c) 2014 Christian Weiske <cweiske@cweiske.de>
  * This file is licensed under the Affero General Public License version 3 or
  * later.
  * See the COPYING-README file.
