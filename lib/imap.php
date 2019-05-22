@@ -109,7 +109,7 @@ class OC_User_IMAP extends \OCA\user_external\Base {
 				]);
 			$query->execute();
 
-			if($groupDomain && $group) {
+			if($this->groupDomain && $group) {
 				$createduser = \OC::$server->getUserManager()->get($uid);
 				\OC::$server->getGroupManager()->createGroup($group)->addUser($createduser);
 			}
