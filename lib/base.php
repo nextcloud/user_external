@@ -173,10 +173,8 @@ abstract class Base extends \OC\User\Backend{
 	 *
 	 * @return void
 	 */
-	protected function storeUser($uid)
-	{
+	protected function storeUser($uid) {
 		if (!$this->userExists($uid)) {
-
 			$query = \OC::$server->getDatabaseConnection()->getQueryBuilder();
 			$query->insert('users_external')
 				->values([
@@ -184,13 +182,7 @@ abstract class Base extends \OC\User\Backend{
 					'backend' => $query->createNamedParameter($this->backend),
 				]);
 			$query->execute();
-			$pieces = explode('@',$uid,2);
-			if($pieces[1]) {
-				$createduser = \OC::$server->getUserManager()->get($uid);
-				\OC::$server->getGroupManager()->createGroup($pieces[1])->addUser($createduser);
-			}
 		}
-		
 	}
 
 	/**

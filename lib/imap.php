@@ -24,6 +24,8 @@ class OC_User_IMAP extends \OCA\user_external\Base {
 	private $port;
 	private $sslmode;
 	private $domain;
+	private $stripeDomain;
+	private $groupDomain;
 
 	/**
 	 * Create new IMAP authentication provider
@@ -33,12 +35,14 @@ class OC_User_IMAP extends \OCA\user_external\Base {
 	 * @param string $sslmode
 	 * @param string $domain  If provided, loging will be restricted to this domain
 	 */
-	public function __construct($mailbox, $port = null, $sslmode = null, $domain = null) {
+	public function __construct($mailbox, $port = null, $sslmode = null, $domain = null, $stripeDomain = true, $groupDomain = false) {
 		parent::__construct($mailbox);
 		$this->mailbox = $mailbox;
 		$this->port = $port === null ? 143 : $port;
 		$this->sslmode = $sslmode;
-		$this->domain= $domain === null ? '' : $domain;
+		$this->domain = $domain === null ? '' : $domain;
+		$this->stripeDomain = $stripeDomain;
+		$this->groupDomain = $groupDomain;
 	}
 
 	/**
@@ -56,13 +60,15 @@ class OC_User_IMAP extends \OCA\user_external\Base {
 			$uid = str_replace("%40","@",$uid);
 		}
 
+		$pieces = explode('@', $uid);
 		if ($this->domain !== '') {
-			$pieces = explode('@', $uid);
 			if (count($pieces) === 1) {
 				$username = $uid . '@' . $this->domain;
 			} else if(count($pieces) === 2 && $pieces[1] === $this->domain) {
 				$username = $uid;
-				$uid = $pieces[0];
+				if ($this->stripeDomain) {
+					$uid = $pieces[0];
+				}
 			} else {
 				return false;
 			}
@@ -87,9 +93,26 @@ class OC_User_IMAP extends \OCA\user_external\Base {
 		if($canconnect) {
  			$rcube->closeConnection();
 			$uid = mb_strtolower($uid);
-			$this->storeUser($uid);
+			$this->storeUser($uid, $pieces[1]);
 			return $uid;
 		}
 		return false;
+	}
+
+	protected function storeUser($uid, $group) {
+		if (!$this->userExists($uid)) {
+			$query = \OC::$server->getDatabaseConnection()->getQueryBuilder();
+			$query->insert('users_external')
+				->values([
+					'uid' => $query->createNamedParameter($uid),
+					'backend' => $query->createNamedParameter($this->backend),
+				]);
+			$query->execute();
+
+			if($groupDomain && $group) {
+				$createduser = \OC::$server->getUserManager()->get($uid);
+				\OC::$server->getGroupManager()->createGroup($group)->addUser($createduser);
+			}
+		}
 	}
 }
