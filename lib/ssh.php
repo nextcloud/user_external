@@ -22,33 +22,33 @@ class OC_User_SSH extends \OCA\user_external\Base {
   private $port;
 
 	/**
-	 * Create a new SSH authentication provider
-	 *
-	 * @param string $host Hostname or IP address of SSH servr
-	 */
+ 	* Create a new SSH authentication provider
+ 	*
+ 	* @param string $host Hostname or IP address of SSH servr
+ 	*/
 	public function __construct($host, $port = 22) {
 		parent::__construct($host);
 		$this->host = $host;
-    $this->port = $port;
+		$this->port = $port;
 	}
 
 	/**
-	 * Check if the password is correct without logging in
-	 * Requires the php-ssh2 pecl extension
-	 *
-	 * @param string $uid      The username
-	 * @param string $password The password
-	 *
-	 * @return true/false
-	 */
+	* Check if the password is correct without logging in
+	* Requires the php-ssh2 pecl extension
+	*
+	* @param string $uid      The username
+	* @param string $password The password
+	*
+	* @return true/false
+	*/
 	public function checkPassword($uid, $password) {
-    if (!extension_loaded('ssh2')) {
-      OC::$server->getLogger()->error(
-        'ERROR: php-ssh2 PECL module missing',
-        ['app' => 'user_external']
-      );
-      return false;
-    }
+		if (!extension_loaded('ssh2')) {
+			OC::$server->getLogger()->error(
+				'ERROR: php-ssh2 PECL module missing',
+				['app' => 'user_external']
+			);
+			return false;
+		}
 		$connection = ssh2_connect($this->host, $this->port);
 		if (ssh2_auth_password($connection, $uid, $password)) {
 			$this->storeUser($uid);
