@@ -31,9 +31,11 @@ class OC_User_IMAP extends \OCA\user_external\Base {
 	 * Create new IMAP authentication provider
 	 *
 	 * @param string $mailbox IMAP server domain/IP
-	 * @param string $port IMAP server $port
+	 * @param int $port IMAP server $port
 	 * @param string $sslmode
 	 * @param string $domain  If provided, loging will be restricted to this domain
+	 * @param boolean $stripeDomain (whether to stripe the domain part from the username or not)
+	 * @param boolean $groupDomain (whether to add the usere to a group corresponding to the domain of the address)
 	 */
 	public function __construct($mailbox, $port = null, $sslmode = null, $domain = null, $stripeDomain = true, $groupDomain = false) {
 		parent::__construct($mailbox);
@@ -76,6 +78,10 @@ class OC_User_IMAP extends \OCA\user_external\Base {
 			$username = $uid;
  		}
 
+		if ($this->groupDomain && $pieces[1]) {
+					$groups[] = $pieces[1];
+		}
+
 		$rcube = new imap_rcube();
 
 		$params = ["port"=>$this->port, "timeout"=>10];
@@ -93,26 +99,9 @@ class OC_User_IMAP extends \OCA\user_external\Base {
 		if($canconnect) {
  			$rcube->closeConnection();
 			$uid = mb_strtolower($uid);
-			$this->storeUser($uid, $pieces[1]);
+			$this->storeUser($uid, $groups);
 			return $uid;
 		}
 		return false;
-	}
-
-	protected function storeUser($uid, $group) {
-		if (!$this->userExists($uid)) {
-			$query = \OC::$server->getDatabaseConnection()->getQueryBuilder();
-			$query->insert('users_external')
-				->values([
-					'uid' => $query->createNamedParameter($uid),
-					'backend' => $query->createNamedParameter($this->backend),
-				]);
-			$query->execute();
-
-			if($this->groupDomain && $group) {
-				$createduser = \OC::$server->getUserManager()->get($uid);
-				\OC::$server->getGroupManager()->createGroup($group)->addUser($createduser);
-			}
-		}
 	}
 }

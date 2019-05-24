@@ -170,10 +170,11 @@ abstract class Base extends \OC\User\Backend{
 	 * Create user record in database
 	 *
 	 * @param string $uid The username
+	 * @param array $groups Groups to add the user to on creation
 	 *
 	 * @return void
 	 */
-	protected function storeUser($uid) {
+	protected function storeUser($uid, $groups) {
 		if (!$this->userExists($uid)) {
 			$query = \OC::$server->getDatabaseConnection()->getQueryBuilder();
 			$query->insert('users_external')
@@ -182,6 +183,13 @@ abstract class Base extends \OC\User\Backend{
 					'backend' => $query->createNamedParameter($this->backend),
 				]);
 			$query->execute();
+
+			if ($groups) {
+				$createduser = \OC::$server->getUserManager()->get($uid);
+				foreach ($groups as $group) {
+					\OC::$server->getGroupManager()->createGroup($group)->addUser($createduser);
+				}
+			}
 		}
 	}
 
