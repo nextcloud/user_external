@@ -152,6 +152,28 @@ Add the following to your `config.php`:
 [BasicAuth_0]: https://en.wikipedia.org/wiki/Basic_access_authentication
 
 
+SSH
+---
+
+Authenticates users via SSH. You can use any SSH2 server, but it must accept password authentication.
+
+### Configuration
+The supported parameters are the hostname and the port (default `22`) of the remote machine.
+
+Add the following to your `config.php`:
+
+    'user_backends' => array(
+        array(
+            'class' => 'OC_User_SSH',
+            'arguments' => array('127.0.0.1', '22'),
+        ),
+    ),
+
+
+### Dependencies
+Requires the php-ssh2 PECL module installed.
+
+
 XMPP (Prosody)
 ----
 Authenticate Nextcloud users against a Prosody XMPP MySQL database.
