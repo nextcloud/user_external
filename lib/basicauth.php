@@ -24,6 +24,31 @@ class OC_User_BasicAuth extends \OCA\user_external\Base {
 	 * @return true/false
 	 */
 	public function checkPassword($uid, $password) {
+		/*
+		 * Connect without user/name password to make sure
+		 * URL is indeed authenticating or not...
+		 */
+		stream_context_set_default(array(
+		  'http'=>array(
+		    'method'=>"GET",
+		  ))
+		);
+		$headers = get_headers($this->authUrl, 1);
+		if(!$headers) {
+			OC::$server->getLogger()->error(
+				'ERROR: Not possible to connect to BasicAuth Url: '.$this->authUrl,
+				['app' => 'user_external']
+			);
+			return false;
+		}
+		if (!isset($headers['WWW-Authenticate'])) {
+			OC::$server->getLogger()->error(
+				'ERROR: Mis-configured BasicAuth Url: '.$this->authUrl,
+				['app' => 'user_external']
+			);
+			return false;
+		}
+
 		stream_context_set_default(array(
 		  'http'=>array(
 		    'method'=>"GET",
