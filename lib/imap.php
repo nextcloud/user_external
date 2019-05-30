@@ -86,9 +86,8 @@ class OC_User_IMAP extends \OCA\user_external\Base {
 
 		$params = ["port"=>$this->port, "timeout"=>10];
 
-		if ($this->sslmode !== null){
-			$params["ssl_mode"] = $this->sslmode;
-		}
+		$params["ssl_mode"] = $this->sslmode ? $this->sslmode : null;
+		$params["force_caps"] = false;
 		$canconnect = $rcube->connect(
 					$this->mailbox,
 					$username,

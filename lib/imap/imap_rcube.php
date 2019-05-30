@@ -146,7 +146,7 @@ class imap_rcube
         $res = 0;
         if ($parts = preg_split('/(\{[0-9]+\}\r\n)/m', $string, -1, PREG_SPLIT_DELIM_CAPTURE)) {
             for ($i=0, $cnt=count($parts); $i<$cnt; $i++) {
-                if (preg_match('/^\{([0-9]+)\}\r\n$/', $parts[$i+1], $matches)) {
+                if (isset($parts[$i+1]) && preg_match('/^\{([0-9]+)\}\r\n$/', $parts[$i+1], $matches)) {
                     // LITERAL+ support
                     if ($this->prefs['literal+']) {
                         $parts[$i+1] = sprintf("{%d+}\r\n", $matches[1]);
