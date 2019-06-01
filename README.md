@@ -1,6 +1,6 @@
 External user authentication
 ============================
-**Authenticate user login against FTP, IMAP or SMB.**
+**Authenticate user login against IMAP, SMB, FTP, WebDAV, HTTP BasicAuth, SSH and XMPP**
 
 Passwords are not stored locally; authentication always happens against
 the remote server.
