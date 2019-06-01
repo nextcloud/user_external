@@ -84,7 +84,7 @@ abstract class Base extends \OC\User\Backend{
 		$query->select('uid', 'displayname')
 			->from('users_external')
 			->where($query->expr()->iLike('displayname', $query->createNamedParameter('%' . $connection->escapeLikeParameter($search) . '%')))
-			->andWhere($query->expr()->iLike('uid', $query->createNamedParameter('%' . $connection->escapeLikeParameter($search) . '%')))
+			->orWhere($query->expr()->iLike('uid', $query->createNamedParameter('%' . $connection->escapeLikeParameter($search) . '%')))
 			->andWhere($query->expr()->eq('backend', $query->createNamedParameter($this->backend)));
 		if ($limit) {
 			$query->setMaxResults($limit);
