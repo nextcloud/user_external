@@ -33,17 +33,17 @@ class OC_User_BasicAuth extends \OCA\user_external\Base {
 		    'method'=>"GET",
 		  ))
 		);
-		$headers = get_headers($this->authUrl, 1);
-		if(!$headers) {
+		$canary = get_headers($this->authUrl, 1);
+		if(!$canary) {
 			OC::$server->getLogger()->error(
 				'ERROR: Not possible to connect to BasicAuth Url: '.$this->authUrl,
 				['app' => 'user_external']
 			);
 			return false;
 		}
-		if (!isset($headers['WWW-Authenticate'])) {
+		if (!isset($canary['WWW-Authenticate'])) {
 			OC::$server->getLogger()->error(
-				'ERROR: Mis-configured BasicAuth Url: '.$this->authUrl,
+				'ERROR: Mis-configured BasicAuth Url: '.$this->authUrl.', provided URL does not do authentication!',
 				['app' => 'user_external']
 			);
 			return false;
