@@ -68,7 +68,7 @@ Add the following to your `config.php`:
         array(
             'class' => 'OC_User_IMAP',
             'arguments' => array(
-                '127.0.0.1', 993, 'ssl', 'example.com'
+                '127.0.0.1', 993, 'ssl', 'example.com', true, false
             ),
         ),
     ),
@@ -79,9 +79,12 @@ you want to restrict the domain (4th parameter), you need to also specify
 the port (2nd parameter) and sslmode (3rd parameter; set to `null` for
 insecure connection).
 If a domain name (e.g. example.com) is specified, then this makes sure that
-only users from this domain will be allowed to login. After successfull
-login the domain part will be striped and the rest used as username in
-Nextcloud. e.g. 'username@example.com' will be 'username' in Nextcloud.
+only users from this domain will be allowed to login. If the fifth parameter
+is set to true, after successfull login the domain part will be striped and
+the rest used as username in Nextcloud. e.g. 'username@example.com' will be
+'username' in Nextcloud. The sixth parameter toggles whether on creation of
+the user, it is added to a group corresponding to the name of the domain part
+of the address. 
 
 
 

@@ -1,6 +1,8 @@
 <?php
 /**
- * Copyright (c) 2012 Robin Appelman <icewind@owncloud.com>
+ * @author Robin Appelman <icewind@owncloud.com>
+ * @author Jonas Sulzer <jonas@violoncello.ch>
+ * @copyright (c) 2012 Robin Appelman <icewind@owncloud.com>
  * This file is licensed under the Affero General Public License version 3 or
  * later.
  * See the COPYING-README file.
@@ -22,21 +24,27 @@ class OC_User_IMAP extends \OCA\user_external\Base {
 	private $port;
 	private $sslmode;
 	private $domain;
+	private $stripeDomain;
+	private $groupDomain;
 
 	/**
 	 * Create new IMAP authentication provider
 	 *
 	 * @param string $mailbox IMAP server domain/IP
-	 * @param string $port IMAP server $port
+	 * @param int $port IMAP server $port
 	 * @param string $sslmode
 	 * @param string $domain  If provided, loging will be restricted to this domain
+	 * @param boolean $stripeDomain (whether to stripe the domain part from the username or not)
+	 * @param boolean $groupDomain (whether to add the usere to a group corresponding to the domain of the address)
 	 */
-	public function __construct($mailbox, $port = null, $sslmode = null, $domain = null) {
+	public function __construct($mailbox, $port = null, $sslmode = null, $domain = null, $stripeDomain = true, $groupDomain = false) {
 		parent::__construct($mailbox);
 		$this->mailbox = $mailbox;
 		$this->port = $port === null ? 143 : $port;
 		$this->sslmode = $sslmode;
-		$this->domain= $domain === null ? '' : $domain;
+		$this->domain = $domain === null ? '' : $domain;
+		$this->stripeDomain = $stripeDomain;
+		$this->groupDomain = $groupDomain;
 	}
 
 	/**
@@ -54,19 +62,25 @@ class OC_User_IMAP extends \OCA\user_external\Base {
 			$uid = str_replace("%40","@",$uid);
 		}
 
+		$pieces = explode('@', $uid);
 		if ($this->domain !== '') {
-			$pieces = explode('@', $uid);
 			if (count($pieces) === 1) {
 				$username = $uid . '@' . $this->domain;
 			} else if(count($pieces) === 2 && $pieces[1] === $this->domain) {
 				$username = $uid;
-				$uid = $pieces[0];
+				if ($this->stripeDomain) {
+					$uid = $pieces[0];
+				}
 			} else {
 				return false;
 			}
 		} else {
 			$username = $uid;
  		}
+
+		if ($this->groupDomain && $pieces[1]) {
+					$groups[] = $pieces[1];
+		}
 
 		$rcube = new imap_rcube();
 
@@ -85,7 +99,7 @@ class OC_User_IMAP extends \OCA\user_external\Base {
 		if($canconnect) {
  			$rcube->closeConnection();
 			$uid = mb_strtolower($uid);
-			$this->storeUser($uid);
+			$this->storeUser($uid, $groups);
 			return $uid;
 		}
 		return false;
