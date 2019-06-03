@@ -41,7 +41,7 @@ class OC_User_BasicAuth extends \OCA\user_external\Base {
 			);
 			return false;
 		}
-		if (!isset($canary['WWW-Authenticate'])) {
+		if (!isset(array_change_key_case($canary, CASE_LOWER)['www-authenticate'])) {
 			OC::$server->getLogger()->error(
 				'ERROR: Mis-configured BasicAuth Url: '.$this->authUrl.', provided URL does not do authentication!',
 				['app' => 'user_external']
