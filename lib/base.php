@@ -174,7 +174,7 @@ abstract class Base extends \OC\User\Backend{
 	 *
 	 * @return void
 	 */
-	protected function storeUser($uid, $groups) {
+	protected function storeUser($uid, $groups = []) {
 		if (!$this->userExists($uid)) {
 			$query = \OC::$server->getDatabaseConnection()->getQueryBuilder();
 			$query->insert('users_external')
