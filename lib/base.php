@@ -213,4 +213,23 @@ abstract class Base extends \OC\User\Backend{
 
 		return $users > 0;
 	}
+
+	/**
+	 * Count the number of users.
+	 *
+	 * @return int|bool The number of users on success false on failure
+	 */
+	public function countUsers() {
+		$connection = \OC::$server->getDatabaseConnection();
+		$query = $connection->getQueryBuilder();
+		$query->select($query->func()->count('*', 'num_users'))
+			->from('users_external')
+			->where($query->expr()->eq('backend', $query->createNamedParameter($this->backend)));
+		$result = $query->execute();
+		$users = $result->fetchColumn();
+		$result->closeCursor();
+
+		return $users > 0;
+	}
+
 }
