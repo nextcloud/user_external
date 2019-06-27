@@ -78,6 +78,7 @@ class OC_User_IMAP extends \OCA\user_external\Base {
 			$username = $uid;
  		}
 
+		$groups = [];
 		if ($this->groupDomain && $pieces[1]) {
 					$groups[] = $pieces[1];
 		}
