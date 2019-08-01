@@ -195,7 +195,7 @@ Add the following to your `config.php`:
                     2 => 'dbuser',
                     3 => 'dbuserpassword',
                     4 => 'xmppdomain',
-		    5 => true,
+                    5 => true,
                 ),
             ),
     ),
@@ -206,6 +206,9 @@ Add the following to your `config.php`:
 3 - Database User Password
 4 - XMPP Domain
 5 - Hashed Passwords in Database (true) / Plaintext Passwords in Database (false)
+
+**⚠⚠ Warning:** If you need to set *5 (Hashed Password in Database)* to false, your Prosody Instance is storing passwords in plaintext. This is insecure and not recommended. We highly recommend that you change your Prosody configuration to protect the passwords of your Prosody users. ⚠⚠
+
 
 Alternatives
 ------------

@@ -22,7 +22,7 @@ class OC_User_XMPP extends \OCA\user_external\Base {
 	private $xmppDomain;
 	private $passwordHashed;
 
-	public function __construct($host, $xmppDb, $xmppDbUser, $xmppDbPassword, $xmppDomain, $passwordHashed) {
+	public function __construct($host, $xmppDb, $xmppDbUser, $xmppDbPassword, $xmppDomain, $passwordHashed = true) {
 		parent::__construct($host);
 		$this->host = $host;
 		$this->xmppDb = $xmppDb;
