@@ -180,7 +180,7 @@ Requires the php-ssh2 PECL module installed.
 XMPP (Prosody)
 ----
 Authenticate Nextcloud users against a Prosody XMPP MySQL database.
-Prosody user and password need to be given for the Nextcloud login
+Prosody user and password need to be given for the Nextcloud login.
 
 
 ### Configuration
@@ -195,9 +195,19 @@ Add the following to your `config.php`:
                     2 => 'dbuser',
                     3 => 'dbuserpassword',
                     4 => 'xmppdomain',
+                    5 => true,
                 ),
             ),
     ),
+
+0 - Database Host
+1 - Prosody Database Name
+2 - Database User
+3 - Database User Password
+4 - XMPP Domain
+5 - Hashed Passwords in Database (true) / Plaintext Passwords in Database (false)
+
+**⚠⚠ Warning:** If you need to set *5 (Hashed Password in Database)* to false, your Prosody Instance is storing passwords in plaintext. This is insecure and not recommended. We highly recommend that you change your Prosody configuration to protect the passwords of your Prosody users. ⚠⚠
 
 
 Alternatives

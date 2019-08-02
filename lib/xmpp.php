@@ -20,14 +20,16 @@ class OC_User_XMPP extends \OCA\user_external\Base {
 	private $xmppDbUser;
 	private $xmppDbPassword;
 	private $xmppDomain;
+	private $passwordHashed;
 
-	public function __construct($host, $xmppDb, $xmppDbUser, $xmppDbPassword, $xmppDomain) {
+	public function __construct($host, $xmppDb, $xmppDbUser, $xmppDbPassword, $xmppDomain, $passwordHashed = true) {
 		parent::__construct($host);
 		$this->host = $host;
 		$this->xmppDb = $xmppDb;
 		$this->xmppDbUser = $xmppDbUser;
 		$this->xmppDbPassword = $xmppDbPassword;
 		$this->xmppDomain = $xmppDomain;
+		$this->passwordHashed = $passwordHashed;
 	}
 
 	public function hmacSha1($key, $data) {
@@ -47,6 +49,51 @@ class OC_User_XMPP extends \OCA\user_external\Base {
                 }
                 return sha1($oPad.sha1($iPad.$data, true));
         }
+	
+	public function validateHashedPassword($user, $uid, $submittedPassword){
+		foreach ($user as $key){
+	        	if($key[3] === "salt") {
+        	        	$internalSalt = $key['value'];
+                	}
+                	if($key[3] === "server_key") {
+                	        $internalServerKey = $key['value'];
+                	}
+                	if($key[3] === "stored_key") {
+                	        $internalStoredKey = $key['value'];
+                	}
+                }
+                unset($user);
+                $internalIteration = '4096';
+                $newSaltedPassword = hash_pbkdf2('sha1', $submittedPassword, $internalSalt, $internalIteration, 0, true);
+                $newServerKey = $this->hmacSha1($newSaltedPassword, 'Server Key');
+                $newClientKey = $this->hmacSha1($newSaltedPassword, 'Client Key');
+                $newStoredKey = sha1(hex2bin($newClientKey));
+
+                if ($newServerKey === $internalServerKey
+ 	               && $newStoredKey === $internalStoredKey) {
+        		$uid = mb_strtolower($uid);
+                        $this->storeUser($uid);
+                        return $uid;
+                } else {
+                	return false;
+                }
+	}
+
+	public function validatePlainPassword($user, $uid, $submittedPassword) {
+	        foreach ($user as $key) {
+        	        if($key[3] === "password") {
+                	        $internalPlainPassword = $key['value'];
+                        }
+                }
+		unset($user);
+                if ($submittedPassword === $internalPlainPassword) {
+	                $uid = mb_strtolower($uid);
+                        $this->storeUser($uid);
+                        return $uid;
+                } else {
+         	       return false;
+                }
+	}
 	
 	public function checkPassword($uid, $password){
 		$pdo = new PDO("mysql:host=$this->host;dbname=$this->xmppDb", $this->xmppDbUser, $this->xmppDbPassword);
@@ -70,32 +117,11 @@ class OC_User_XMPP extends \OCA\user_external\Base {
         		if(empty($user)) {
                 		return false;
 			}
-        		foreach ($user as $key){
-                        	if($key[3] === "salt") {
-                        	        $internalSalt = $key['value'];
-				}
-                        	if($key[3] === "server_key") {
-                        	        $internalServerKey = $key['value'];
-				}
-                        	if($key[3] === "stored_key") {
-                        	        $internalStoredKey = $key['value'];
-				}
-		        }
-	        	unset($user);
-		        $internalIteration = '4096';
-
-		        $newSaltedPassword = hash_pbkdf2('sha1', $submittedPassword, $internalSalt, $internalIteration, 0, true);
-		        $newServerKey = $this->hmacSha1($newSaltedPassword, 'Server Key');
-		        $newClientKey = $this->hmacSha1($newSaltedPassword, 'Client Key');
-		        $newStoredKey = sha1(hex2bin($newClientKey));
-
-		        if ($newServerKey === $internalServerKey 
-			    && $newStoredKey === $internalStoredKey) {
-				$uid = mb_strtolower($uid);
-	                        $this->storeUser($uid);
-				return $uid;
+			
+			if ($this->passwordHashed === true) {
+				return $this->validateHashedPassword($user, $uid, $submittedPassword);
 			} else {
-				return false;
+				return $this->validatePlainPassword($user, $uid, $submittedPassword);
 			}
 		}
 	}
