@@ -73,9 +73,9 @@ class OC_User_IMAP extends \OCA\user_external\Base {
 				}
 			} else {
 				OC::$server->getLogger()->error(
-				'ERROR: Wrong domain: '.$this->domain,
-				['app' => 'user_external']
-			);
+					'ERROR: User has a wrong domain! Expecting: '.$this->domain,
+					['app' => 'user_external']
+				);
 				return false;
 			}
 		} else {
