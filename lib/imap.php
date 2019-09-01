@@ -72,6 +72,10 @@ class OC_User_IMAP extends \OCA\user_external\Base {
 					$uid = $pieces[0];
 				}
 			} else {
+				OC::$server->getLogger()->error(
+					'ERROR: User has a wrong domain! Expecting: '.$this->domain,
+					['app' => 'user_external']
+				);
 				return false;
 			}
 		} else {
@@ -101,7 +105,13 @@ class OC_User_IMAP extends \OCA\user_external\Base {
 			$uid = mb_strtolower($uid);
 			$this->storeUser($uid, $groups);
 			return $uid;
+		} else {
+			OC::$server->getLogger()->error(
+				'ERROR: Could not connect via roundcube lib: '.$rcube->error,
+				['app' => 'user_external']
+			);
 		}
+
 		return false;
 	}
 }
