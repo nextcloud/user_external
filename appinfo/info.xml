@@ -2,19 +2,19 @@
 <info xmlns:xsi= "http://www.w3.org/2001/XMLSchema-instance"
 	  xsi:noNamespaceSchemaLocation="https://apps.nextcloud.com/schema/apps/info.xsd">
 	<id>user_external</id>
-	<name>External user support</name>
+	<name>External user authentication</name>
 	<summary>Use external user authentication methods like IMAP, SMB, FTP, WebDAV, HTTP BasicAuth, SSH and XMPP</summary>
-	<description><![CDATA[
-      Use external user authentication methods to give users acces to your Nextcloud instance:
-      - IMAP
-      - SMB
-      - FTP
-      - WebDAV
-      - HTTP BasicAuth
-      - SSH
-      - XMPP
+	<description><![CDATA[Use external user authentication methods to give users acces to your Nextcloud instance:
 
-      Read the [documentation](https://github.com/nextcloud/user_external#readme) to learn how to configure it!
+* IMAP
+* SMB
+* FTP
+* WebDAV
+* HTTP BasicAuth
+* SSH
+* XMPP
+
+Read the [documentation](https://github.com/nextcloud/user_external#readme) to learn how to configure it!
     ]]></description>
 	<version>0.6.4</version>
 	<licence>agpl</licence>
