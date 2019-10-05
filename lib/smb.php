@@ -39,7 +39,7 @@ class OC_User_SMB extends \OCA\user_external\Base{
 	private function tryAuthentication($uid, $password) {
 		$uidEscaped = escapeshellarg($uid);
 		$password = escapeshellarg($password);
-		$command = self::SMBCLIENT.' '.escapeshellarg('//' . $this->host . '/dummy').' -U'.$uidEscaped.'%'.$password;
+		$command = self::SMBCLIENT.' '.escapeshellarg('//' . $this->host . '/dummy').' -U '.$uidEscaped.'%'.$password;
 		$lastline = exec($command, $output, $retval);
 		if ($retval === 127) {
 			OC::$server->getLogger()->error(
