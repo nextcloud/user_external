@@ -136,6 +136,8 @@ BasicAuth
 
 Authenticate users by an [HTTP Basic access authentication][BasicAuth_0]  call.
 HTTP server of your choice to authenticate. It should return HTTP 2xx for correct credentials and an appropriate other error code for wrong ones or refused access.
+The HTTP server _must_ respond to any requests to the target URL with the "www-authenticate" header set. 
+Otherwise BasicAuth considers itself to be misconfigured or the HTTP server unfit for authentication.
 
 ### Configuration
 The only supported parameter is the URL of the web server where the authentication happens.
