@@ -1,7 +1,7 @@
 <?php
-OC::$CLASSPATH['OC_User_IMAP']='user_external/lib/imap.php';
-OC::$CLASSPATH['OC_User_SMB']='user_external/lib/smb.php';
-OC::$CLASSPATH['OC_User_FTP']='user_external/lib/ftp.php';
-OC::$CLASSPATH['OC_User_BasicAuth']='user_external/lib/basicauth.php';
-OC::$CLASSPATH['OC_User_SSH']='user_external/lib/ssh.php';
-OC::$CLASSPATH['OC_User_XMPP']='user_external/lib/xmpp.php';
+include_once(__DIR__ . '/../lib/imap.php');
+include_once(__DIR__ . '/../lib/smb.php');
+include_once(__DIR__ . '/../lib/ftp.php');
+include_once(__DIR__ . '/../lib/basicauth.php');
+include_once(__DIR__ . '/../lib/ssh.php');
+include_once(__DIR__ . '/../lib/xmpp.php');
