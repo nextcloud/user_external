@@ -13,6 +13,8 @@ their configured display name.
 
 If something does not work, check the log file at `nextcloud/data/nextcloud.log`.
 
+**⚠⚠ Warning:** If you are using more than one backend or especially one backend more often than once, make sure that you still have resp. get unique `uid`s in the database. ⚠⚠
+
 
 FTP
 ---
@@ -86,6 +88,7 @@ the rest used as username in Nextcloud. e.g. 'username@example.com' will be
 the user, it is added to a group corresponding to the name of the domain part
 of the address. 
 
+**⚠⚠ Warning:** If you are [**upgrading** from versions **<0.6.0**](https://github.com/nextcloud/user_external/releases/tag/v0.6.0), beside adapting your `config.php` you also have to change the `backend` column in the `users_external` table of the database. In your pre 0.6.0 database it may look like `{127.0.0.1:993/imap/ssl/readonly}INBOX` or similar, but now it has to be just `127.0.0.1` for everything to work flawless again. ⚠⚠
 
 
 Samba
