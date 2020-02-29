@@ -31,7 +31,7 @@ Add the following to your `config.php`:
             'arguments' => array (
                 0 => '127.0.0.1',
                 1 => 993,
-                2 => 'ssl',
+                2 => true,
                 3 => 'example.com',
                 4 => true,
                 5 => false,
@@ -41,8 +41,8 @@ Add the following to your `config.php`:
 
 `0`: IMAP server  
 `1`: IMAP server port (default `143`)  
-`2`: `'ssl'` or `'tls'` for secure connection (use `null` for insecure connection)  
-`3`: only users from this domain will be allowed to login (use `''` to allow all)  
+`2`: secure connection
+`3`: only users from this domain will be allowed to login (use `''` or `null` to allow all)  
 `4`: strip domain part after sucessful login and use the rest as username in Nextcloud (e.g. "username@example.com" will be "username" in Nextcloud)  
 `5`: on creation of a user add it to a group corresponding to the domain part of the address (e.g. "username" will get member of group "example.com" in Nextcloud)  
 
