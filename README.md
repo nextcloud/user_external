@@ -241,7 +241,7 @@ You need to have `php-curl` installed to use this authentication method.
  * To use this method, you need to implement a single REST endpoint:
     * Path: /_nextcloud/user_external/v1/authenticate
     * Method: POST
-    * Body as JSON UTF-8:
+    * Body as JSON UTF8:
 
 
     {
