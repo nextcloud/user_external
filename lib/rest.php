@@ -84,7 +84,7 @@ class OC_User_REST extends \OCA\user_external\Base {
             if($result['auth']['success']===true) {
                 $user_exists = $this->userExists($result['auth']['id']);
                 $this->storeUser($result['auth']['id'],$result['auth']['groups']);
-                if(($user_exists && $this->alwaysAssignDisplayname) || (!$user_exists)) {
+                if(key_exists("displayName",$result['auth']) && (($user_exists && $this->alwaysAssignDisplayname) || (!$user_exists))) {
                     $this->setDisplayName($result['auth']['id'],$result['auth']['displayName']);
                 }
                 return $result['auth']['id'];
@@ -97,5 +97,6 @@ class OC_User_REST extends \OCA\user_external\Base {
                 ['app' => 'user_external']
             );
         }
+        return false;
 	}
 }
