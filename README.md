@@ -222,56 +222,53 @@ Authenticate Nextcloud users against a REST JSON authentication API.
 The parameters are `URL, alwaysAssignDisplayname`. If you set the last parameter to `true`, the display name of the user will be replaced *each* time the users performs a login. 
 
 Add the following to your `config.php`:
-
-    'user_backends' => array (
-        0 => array (
-            'class' => 'OC_User_REST',
-                'arguments' => array (
-                    0 => 'https://URLofyourRESTserver',
-                    1 => false
-                ),
-            ),
+```
+'user_backends' => array (
+    0 => array (
+        'class' => 'OC_User_REST',
+        'arguments' => array (
+            0 => 'https://URLofyourRESTserver',
+            1 => false
+        ),
     ),
-
+),
+```
 ### Dependencies
 You need to have `php-curl` installed to use this authentication method.
 
 ### REST endpoints
- * This script perfoms an authentication via a POST JSON REST Request.
- * To use this method, you need to implement a single REST endpoint:
-    * Path: /_nextcloud/user_external/v1/authenticate
-    * Method: POST
-    * Body as JSON UTF8:
-
-
-    {
-       "user": {
-           "id": "UserID",
-           "password": "enteredPassword"
-       }
-    }
- 
+* This script perfoms an authentication via a POST JSON REST Request.
+* To use this method, you need to implement a single REST endpoint:
+   * Path: /_nextcloud/user_external/v1/authenticate
+   * Method: POST
+   * Body as JSON UTF8:
+```
+{
+   "user": {
+       "id": "UserID",
+       "password": "enteredPassword"
+   }
+}
+``` 
  * If the transmitted credentials are correct, your JSON answer should be:
-
-
-    {
-        "auth": {
-            "success": true,
-            "id": "UserID",
-            "displayName": "Display Name to Store",
-            "groups": ["group1","group2"]
-        }
+```
+{
+    "auth": {
+        "success": true,
+        "id": "UserID",
+        "displayName": "Display Name to Store",
+        "groups": ["group1","group2"]
     }
-
+}
+```
 * If the Authentication fails, your JSON answer should be:
-
-
-    {
-        "auth": {
-            "success": false
-        }
+```
+{
+    "auth": {
+        "success": false
     }
-
+}
+```
 Alternatives
 ------------
 Other extensions allow connecting to external user databases directly via SQL, which may be faster:
