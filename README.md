@@ -242,8 +242,8 @@ You need to have `php-curl` installed to use this authentication method.
     * Path: /_nextcloud/user_external/v1/authenticate
     * Method: POST
     * Body as JSON UTF-8:
- 
-    
+
+
     {
        "user": {
            "id": "UserID",
@@ -252,8 +252,8 @@ You need to have `php-curl` installed to use this authentication method.
     }
  
  * If the transmitted credentials are correct, your JSON answer should be:
- 
- 
+
+
     {
         "auth": {
             "success": true,
@@ -265,14 +265,13 @@ You need to have `php-curl` installed to use this authentication method.
 
 * If the Authentication fails, your JSON answer should be:
 
-    
+
     {
         "auth": {
             "success": false
         }
     }
- 
- 
+
 Alternatives
 ------------
 Other extensions allow connecting to external user databases directly via SQL, which may be faster:
