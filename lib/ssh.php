@@ -7,7 +7,7 @@
  */
 
 /**
- * User authentication against a FTP/FTPS server
+ * User authentication against a SSH server
  *
  * @category Apps
  * @package  UserExternal
