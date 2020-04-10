@@ -85,9 +85,12 @@ class OC_User_IMAP extends \OCA\user_external\Base {
 					$groups[] = $pieces[1];
 		}
 
-		$protocol = $this->sslmode ? "imaps" : "imap";
+		$protocol = ($this->sslmode === "ssl") ? "imaps" : "imap";
 		$url = "{$protocol}://{$this->mailbox}:{$this->port}";
 		$ch = curl_init();
+		if ($this->sslmode === 'tls') {
+			curl_setopt($ch, CURLOPT_USE_SSL, CURLUSESSL_ALL);
+		}
 		curl_setopt($ch, CURLOPT_URL, $url);
 		curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
 		curl_setopt($ch, CURLOPT_USERPWD, $username.":".$password);
