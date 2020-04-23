@@ -28,12 +28,13 @@ class OC_User_BasicAuth extends \OCA\user_external\Base {
 		 * Connect without user/name password to make sure
 		 * URL is indeed authenticating or not...
 		 */
-		stream_context_set_default(array(
-		  'http'=>array(
-		    'method'=>"GET",
+		$context = stream_context_create(array(
+		  'http' => array(
+		    'method' => "GET",
+		    'follow_location' => 0
 		  ))
 		);
-		$canary = get_headers($this->authUrl, 1);
+		$canary = get_headers($this->authUrl, 1, $context);
 		if(!$canary) {
 			OC::$server->getLogger()->error(
 				'ERROR: Not possible to connect to BasicAuth Url: '.$this->authUrl,
@@ -49,13 +50,14 @@ class OC_User_BasicAuth extends \OCA\user_external\Base {
 			return false;
 		}
 
-		stream_context_set_default(array(
-		  'http'=>array(
-		    'method'=>"GET",
-		    'header' => "authorization: Basic " . base64_encode("$uid:$password")
+		$context = stream_context_create(array(
+		  'http' => array(
+		    'method' => "GET",
+		    'header' => "authorization: Basic " . base64_encode("$uid:$password"),
+		    'follow_location' => 0
 		  ))
 		);
-		$headers = get_headers($this->authUrl, 1);
+		$headers = get_headers($this->authUrl, 1, $context);
 
 		if(!$headers) {
 			OC::$server->getLogger()->error(
