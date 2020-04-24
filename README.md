@@ -88,7 +88,7 @@ the rest used as username in Nextcloud. e.g. 'username@example.com' will be
 the user, it is added to a group corresponding to the name of the domain part
 of the address. 
 
-In case when not all email account should have access to nexclodu platform you can limit allowed users adding optional user_regexp setting.
+In case when not all email accounts should have access to nexcloud platform you can limit allowed users adding optional user_regexp setting.
 That should be PHP preg_match patern. Be carreful with these setting especially with ^$ chars. Without ^$ patern 'user1' will match also 'other_user10' account!
 
 **⚠⚠ Warning:** If you are [**upgrading** from versions **<0.6.0**](https://github.com/nextcloud/user_external/releases/tag/v0.6.0), beside adapting your `config.php` you also have to change the `backend` column in the `users_external` table of the database. In your pre 0.6.0 database it may look like `{127.0.0.1:993/imap/ssl/readonly}INBOX` or similar, but now it has to be just `127.0.0.1` for everything to work flawless again. ⚠⚠
