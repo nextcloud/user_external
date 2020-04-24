@@ -62,7 +62,7 @@ IMAP user and password need to be given for the Nextcloud login.
 
 
 ### Configuration
-The parameters are `host, port, sslmode, domain`.
+The parameters are `host, port, sslmode, domain, user_regexp`.
 Possible values for sslmode are `ssl` or `tls`.
 Add the following to your `config.php`:
 
@@ -70,7 +70,7 @@ Add the following to your `config.php`:
         array(
             'class' => 'OC_User_IMAP',
             'arguments' => array(
-                '127.0.0.1', 993, 'ssl', 'example.com', true, false
+                '127.0.0.1', 993, 'ssl', 'example.com', true, false, '^user[0-9]?$|^admin_user$|^other_admin_user$'
             ),
         ),
     ),
@@ -87,6 +87,9 @@ the rest used as username in Nextcloud. e.g. 'username@example.com' will be
 'username' in Nextcloud. The sixth parameter toggles whether on creation of
 the user, it is added to a group corresponding to the name of the domain part
 of the address. 
+
+In case when not all email account should have access to nexclodu platform you can limit allowed users adding optional user_regexp setting.
+That should be PHP preg_match patern. Be carreful with these setting especially with ^$ chars. Without ^$ patern 'user1' will match also 'other_user10' account!
 
 **⚠⚠ Warning:** If you are [**upgrading** from versions **<0.6.0**](https://github.com/nextcloud/user_external/releases/tag/v0.6.0), beside adapting your `config.php` you also have to change the `backend` column in the `users_external` table of the database. In your pre 0.6.0 database it may look like `{127.0.0.1:993/imap/ssl/readonly}INBOX` or similar, but now it has to be just `127.0.0.1` for everything to work flawless again. ⚠⚠
 

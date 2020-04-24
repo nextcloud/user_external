@@ -35,7 +35,7 @@ class OC_User_IMAP extends \OCA\user_external\Base {
 	 * @param boolean $stripeDomain (whether to stripe the domain part from the username or not)
 	 * @param boolean $groupDomain (whether to add the usere to a group corresponding to the domain of the address)
 	 */
-	public function __construct($mailbox, $port = null, $sslmode = null, $domain = null, $stripeDomain = true, $groupDomain = false) {
+	public function __construct($mailbox, $port = null, $sslmode = null, $domain = null, $stripeDomain = true, $groupDomain = false, $user_regexp = null) {
 		parent::__construct($mailbox);
 		$this->mailbox = $mailbox;
 		$this->port = $port === null ? 143 : $port;
@@ -43,6 +43,7 @@ class OC_User_IMAP extends \OCA\user_external\Base {
 		$this->domain = $domain === null ? '' : $domain;
 		$this->stripeDomain = $stripeDomain;
 		$this->groupDomain = $groupDomain;
+		$this->user_regexp = $user_regexp === null ? '' : $user_regexp;
 	}
 
 	/**
@@ -79,6 +80,16 @@ class OC_User_IMAP extends \OCA\user_external\Base {
 		} else {
 			$username = $uid;
  		}
+
+		if ($this->user_regexp != '') {
+			if (!preg_match('/'.$this->user_regexp.'/', $username)) {
+				OC::$server->getLogger()->error(
+				'ERROR: User:'.$username.' does NOT match user regexp: '.$this->user_regexp,
+				['app' => 'user_external']
+				);
+				return false;
+			}
+		}
 
 		$groups = [];
 		if ($this->groupDomain && $pieces[1]) {
