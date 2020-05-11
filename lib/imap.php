@@ -95,6 +95,7 @@ class OC_User_IMAP extends \OCA\user_external\Base {
 		curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
 		curl_setopt($ch, CURLOPT_USERPWD, $username.":".$password);
 		curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 10);
+		curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'CAPABILITY');
 
 		$canconnect = curl_exec($ch);
 
