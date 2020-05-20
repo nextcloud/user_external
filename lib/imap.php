@@ -81,7 +81,7 @@ class OC_User_IMAP extends \OCA\user_external\Base {
 			$username = $uid;
  		}
 
-		if ($this->user_regexp != '') {
+		if ($this->user_regexp !== '') {
 			if (!preg_match('/'.$this->user_regexp.'/', $username)) {
 				OC::$server->getLogger()->error(
 				'ERROR: User:'.$username.' does NOT match user regexp: '.$this->user_regexp,
