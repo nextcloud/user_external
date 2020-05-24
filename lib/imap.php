@@ -61,7 +61,9 @@ class OC_User_IMAP extends \OCA\user_external\Base {
 
 		// Replace escaped splitter in uid
 		// but only if there is no splitter symbol and if there is a escaped splitter inside the uid
-		if (!(strpos($uid, $this->domainSplitter) !== false) && (strpos($uid, $domainSplitterEncoded) !== false)) {
+		if (($this->domainSplitter != $domainSplitterEncoded) 
+				&& !(strpos($uid, $this->domainSplitter) !== false) 
+				&& (strpos($uid, $domainSplitterEncoded) !== false)) {
 			$uid = str_replace($domainSplitterEncoded,$this->domainSplitter,$uid);
 		}
 
