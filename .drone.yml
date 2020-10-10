@@ -3,7 +3,7 @@ name: check-app-compatbility
 
 steps:
   - name: check-app-compatbility
-    image: nextcloudci/php7.2:php7.2-9
+    image: nextcloudci/php7.4:php7.4-2
     environment:
       APP_NAME: user_external
       CORE_BRANCH: master
