@@ -97,9 +97,10 @@ class OC_User_IMAP extends \OCA\user_external\Base {
 		curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 10);
 		curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'CAPABILITY');
 
-		$canconnect = curl_exec($ch);
+		curl_exec($ch);
+		$errorcode = curl_errno($ch);
 
-		if($canconnect) {
+		if($errorcode == 0) {
 			curl_close($ch);
 			$uid = mb_strtolower($uid);
 			$this->storeUser($uid, $groups);
