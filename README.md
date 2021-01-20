@@ -235,12 +235,9 @@ Add the following to your `config.php`:
             ),
     ),
 
-0 - Authentication Endpoint
-        (Required) This is the URL to your authentication endpoint. You are fully responsible for doing proper authentication on your authentication endpoint's side. If the authentication was successful, your authentication endpoint must respond with HTTP status code *202*, any other HTTP status code will be detected as unauthenticated.
-1 - Hash Algorithm
-        (Optional) By default, the user's password is sent in plaintext your authentication endpoint. If you set a hash algorithm, only the hashed password is sent to your authentication endpoint. Supportet algorithms: https://www.php.net/manual/en/function.hash-algos.php
-2 - Access Key
-        (Optional) If you have secured your authentication endpoint you can define an access key. This key is sent to your authentication endpoint when Nextcloud tries to send requests to your authentication endpoint.
+0 - (Required) Authentication Endpoint: This is the URL to your authentication endpoint. You are fully responsible for doing proper authentication on your authentication endpoint's side. If the authentication was successful, your authentication endpoint must respond with HTTP status code *202*, any other HTTP status code will be detected as unauthenticated.
+1 - (Optional) Hash Algorithm: By default, the user's password is sent in plaintext your authentication endpoint. If you set a hash algorithm, only the hashed password is sent to your authentication endpoint. Supportet algorithms: https://www.php.net/manual/en/function.hash-algos.php
+2 - (Optional) Access Key: If you have secured your authentication endpoint you can define an access key. This key is sent to your authentication endpoint when Nextcloud tries to send requests to your authentication endpoint.
 
 
 Alternatives
