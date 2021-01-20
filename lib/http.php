@@ -19,7 +19,7 @@ class OC_User_HTTP extends \OCA\user_external\Base {
 	private $accessKey;
 	private $authenticationEndpoint;
 
-	public function __construct($authenticationEndpoint, $hashAlgo, $accessKey) {
+	public function __construct($authenticationEndpoint, $hashAlgo = false, $accessKey = '') {
 		parent::__construct($authenticationEndpoint);
 		$this->authenticationEndpoint = $authenticationEndpoint;
 		$this->hashAlgo = $hashAlgo;
