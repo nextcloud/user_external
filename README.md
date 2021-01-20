@@ -215,6 +215,34 @@ Add the following to your `config.php`:
 **⚠⚠ Warning:** If you need to set *5 (Hashed Password in Database)* to false, your Prosody Instance is storing passwords in plaintext. This is insecure and not recommended. We highly recommend that you change your Prosody configuration to protect the passwords of your Prosody users. ⚠⚠
 
 
+HTTP
+----
+Authenticate Nextcloud users against a generic HTTP interface.
+A user and password need to be given for the Nextcloud login. If the configured HTTP interface responds with HTTP Status Code *202*, the user is authenticated successfully.
+
+
+### Configuration
+Add the following to your `config.php`:
+
+    'user_backends' => array (
+        0 => array (
+            'class' => 'OC_User_HTTP',
+                'arguments' => array (
+                    0 => 'https://example.com/authenticate.php',
+                    1 => 'sha1',
+                    2 => 'GbTESTexHJyWYs3Yr9WiUwIuJgH7zsJSax',
+                ),
+            ),
+    ),
+
+0 - Authentication Endpoint
+        (Required) This is the URL to your authentication endpoint. You are fully responsible for doing proper authentication on your authentication endpoint's side. If the authentication was successful, your authentication endpoint must respond with HTTP status code *202*, any other HTTP status code will be detected as unauthenticated.
+1 - Hash Algorithm
+        (Optional) By default, the user's password is sent in plaintext your authentication endpoint. If you set a hash algorithm, only the hashed password is sent to your authentication endpoint. Supportet algorithms: https://www.php.net/manual/en/function.hash-algos.php
+2 - Access Key
+        (Optional) If you have secured your authentication endpoint you can define an access key. This key is sent to your authentication endpoint when Nextcloud tries to send requests to your authentication endpoint.
+
+
 Alternatives
 ------------
 Other extensions allow connecting to external user databases directly via SQL, which may be faster:
