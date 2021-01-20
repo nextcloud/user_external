@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) 2019 Sebastian Sterk <sebastian@wiuwiu.de>
+ * Copyright (c) 2021 Sebastian Sterk <sebastian@wiuwiu.de>
  * This file is licensed under the Affero General Public License version 3 or
  * later.
  * See the COPYING-README file.
@@ -34,7 +34,7 @@ class OC_User_HTTP extends \OCA\user_external\Base {
 		curl_setopt($ch, CURLOPT_URL, $this->authenticationEndpoint);
 		curl_setopt($ch, CURLOPT_HEADER, true);
 		curl_setopt($ch, CURLOPT_NOBODY, true);
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+		curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
 		curl_setopt($ch, CURLOPT_POST, 1);
 		curl_setopt($ch, CURLOPT_POSTFIELDS, 
 			http_build_query(array(
