@@ -78,8 +78,7 @@ class OC_User_BasicAuth extends \OCA\user_external\Base {
 		}
 		switch (substr($headers[$responseIdx], 9, 1)) {
 			case "2":
-				$this->storeUser($uid);
-				return $uid;
+				return $this->storeUser($uid);
 			case "3":
 				OC::$server->getLogger()->error(
 					'ERROR: Too many redirects from BasicAuth Url: '.$this->authUrl, 
