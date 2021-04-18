@@ -1,6 +1,6 @@
 External user authentication
 ============================
-**Authenticate user login against IMAP, SMB, FTP, WebDAV, HTTP BasicAuth, SSH and XMPP**
+**Authenticate user login against IMAP, SMB, FTP, WebDAV, HTTP BasicAuth, SSH, RADIUS, and XMPP**
 
 Passwords are not stored locally; authentication always happens against
 the remote server.
@@ -213,6 +213,45 @@ Add the following to your `config.php`:
 5 - Hashed Passwords in Database (true) / Plaintext Passwords in Database (false)
 
 **⚠⚠ Warning:** If you need to set *5 (Hashed Password in Database)* to false, your Prosody Instance is storing passwords in plaintext. This is insecure and not recommended. We highly recommend that you change your Prosody configuration to protect the passwords of your Prosody users. ⚠⚠
+
+
+RADIUS
+------
+Authenticate Nextcloud users against a RADIUS server.
+RADIUS user and password need to be given for the Nextcloud login.
+Initial implementation tested with PAP and freeradius.
+
+
+### Configuration
+The parameters are `host, port, sslmode, domain`.
+Possible values for sslmode are `ssl` or `tls`.
+Add the following to your `config.php`:
+
+    'user_backends' => array(
+        array(
+            'class' => 'OC_User_RADIUS',
+            'arguments' => array(
+                'radserver', 1645, 'radsecret', 'PAP', 'example.com', true, false
+            ),
+        ),
+    ),
+
+This connects to the RADIUS server on hostname `radserver`.
+The default port is 1645. However, note that parameter order matters and if
+Replace 'radsecret' with a valid RADIUS client secret.
+The fourth parameter is the Authentication method.  Currently only PAP is
+supported.  Other methods should be easy to implement, but I don't have
+them available to test. 
+If a domain name (e.g. example.com) is specified, then this makes sure that
+only users from this domain will be allowed to login. If the sixth parameter
+is set to true, after successfull login the domain part will be striped and
+the rest used as username in Nextcloud. e.g. 'username@example.com' will be
+'username' in Nextcloud. The seventh parameter toggles whether on creation of
+the user, it is added to a group corresponding to the name of the domain part
+of the address. 
+
+### Dependencies
+The PHP RADIUS extension must be installed.  (e.g. "apt install php-radius" on debian)
 
 
 Alternatives
