@@ -34,7 +34,7 @@ class OC_User_IMAP extends \OCA\user_external\Base {
 	 * @param string $domain  If provided, loging will be restricted to this domain
 	 * @param boolean $stripeDomain (whether to stripe the domain part from the username or not)
 	 * @param boolean $groupDomain (whether to add the usere to a group corresponding to the domain of the address)
-     * @param string $loginoptions What authorization method to use (for example AUTH=PLAIN, AUTH=LOGIN, AUTH=DIGEST-MD5, AUTH=CRAM-MD5, AUTH=NTLM, AUTH=GSSAPI, AUTH=AUTO, AUTH=* and more)
+     * @param string $loginoptions set login options (for example authorization method to use AUTH=PLAIN, AUTH=LOGIN, AUTH=DIGEST-MD5, AUTH=CRAM-MD5, AUTH=NTLM, AUTH=GSSAPI, AUTH=AUTO, AUTH=* and more)
 	 */
 	public function __construct($mailbox, $port = null, $sslmode = null, $domain = null, $stripeDomain = true, $groupDomain = false, $loginoptions = null) {
 		parent::__construct($mailbox);
