@@ -9,10 +9,14 @@
 class OC_User_BasicAuth extends \OCA\user_external\Base {
 
 	private $authUrl;
+	private $authorizationHeader;
+	private $skipCanaryCheck;
 
-	public function __construct($authUrl) {
+	public function __construct($authUrl, $header = 'authorization', $skipCanary = false) {
 		parent::__construct($authUrl);
-		$this->authUrl =$authUrl;
+		$this->authUrl = $authUrl;
+		$this->authorizationHeader = $header;
+		$this->skipCanaryCheck = $skipCanary;
 	}
 
 	/**
@@ -24,36 +28,38 @@ class OC_User_BasicAuth extends \OCA\user_external\Base {
 	 * @return true/false
 	 */
 	public function checkPassword($uid, $password) {
-		/*
-		 * Connect without user/name password to make sure
-		 * URL is indeed authenticating or not...
-		 */
-		$context = stream_context_create(array(
-		  'http' => array(
-		    'method' => "GET",
-		    'follow_location' => 0
-		  ))
-		);
-		$canary = get_headers($this->authUrl, 1, $context);
-		if(!$canary) {
-			OC::$server->getLogger()->error(
-				'ERROR: Not possible to connect to BasicAuth Url: '.$this->authUrl,
-				['app' => 'user_external']
+		if (!$this->skipCanaryCheck) {
+			/*
+			* Connect without user/name password to make sure
+			* URL is indeed authenticating or not...
+			*/
+			$context = stream_context_create(array(
+			'http' => array(
+				'method' => "GET",
+				'follow_location' => 0
+			))
 			);
-			return false;
-		}
-		if (!isset(array_change_key_case($canary, CASE_LOWER)['www-authenticate'])) {
-			OC::$server->getLogger()->error(
-				'ERROR: Mis-configured BasicAuth Url: '.$this->authUrl.', provided URL does not do authentication!',
-				['app' => 'user_external']
-			);
-			return false;
+			$canary = get_headers($this->authUrl, 1, $context);
+			if(!$canary) {
+				OC::$server->getLogger()->error(
+					'ERROR: Not possible to connect to BasicAuth Url: '.$this->authUrl,
+					['app' => 'user_external']
+				);
+				return false;
+			}
+			if (!isset(array_change_key_case($canary, CASE_LOWER)['www-authenticate'])) {
+				OC::$server->getLogger()->error(
+					'ERROR: Mis-configured BasicAuth Url: '.$this->authUrl.', provided URL does not do authentication!',
+					['app' => 'user_external']
+				);
+				return false;
+			}
 		}
 
 		$context = stream_context_create(array(
 		  'http' => array(
 		    'method' => "GET",
-		    'header' => "authorization: Basic " . base64_encode("$uid:$password"),
+		    'header' => $this->authorizationHeader . ": Basic " . base64_encode("$uid:$password"),
 		    'follow_location' => 0
 		  ))
 		);
