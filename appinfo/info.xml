@@ -3,7 +3,7 @@
 	  xsi:noNamespaceSchemaLocation="https://apps.nextcloud.com/schema/apps/info.xsd">
 	<id>user_external</id>
 	<name>External user authentication</name>
-	<summary>Use external user authentication methods like IMAP, SMB, FTP, WebDAV, HTTP BasicAuth, SSH and XMPP</summary>
+	<summary>Use external user authentication methods like IMAP, SMB, FTP, WebDAV, HTTP BasicAuth, SSH, XMPP and HTTP</summary>
 	<description><![CDATA[Use external user authentication methods to give users acces to your Nextcloud instance:
 
 * IMAP
@@ -13,6 +13,7 @@
 * HTTP BasicAuth
 * SSH
 * XMPP
+* HTTP
 
 Read the [documentation](https://github.com/nextcloud/user_external#readme) to learn how to configure it!
     ]]></description>
