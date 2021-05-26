@@ -172,7 +172,7 @@ abstract class Base extends \OC\User\Backend{
 	 * @param string $uid The username
 	 * @param array $groups Groups to add the user to on creation
 	 *
-	 * @return void
+	 * @return string the uid as stored in the db.
 	 */
 	protected function storeUser($uid, $groups = []) {
 		if (!$this->userExists($uid)) {
@@ -190,7 +190,19 @@ abstract class Base extends \OC\User\Backend{
 					\OC::$server->getGroupManager()->createGroup($group)->addUser($createduser);
 				}
 			}
-		}
+			return $uid;
+		} else {
+            $connection = \OC::$server->getDatabaseConnection();
+            $query = \OC::$server->getDatabaseConnection()->getQueryBuilder();
+            $query->select('uid')
+                ->from('users_external')
+                ->where($query->expr()->iLike('uid', $query->createNamedParameter($connection->escapeLikeParameter($uid))))
+                ->andWhere($query->expr()->eq('backend', $query->createNamedParameter($this->backend)));
+            $result = $query->execute();
+            $db_uid = $result->fetchColumn();
+            $result->closeCursor();
+            return $db_uid;
+        }
 	}
 
 	/**
