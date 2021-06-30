@@ -100,7 +100,7 @@ class OC_User_IMAP extends \OCA\user_external\Base {
 		curl_exec($ch);
 		$errorcode = curl_errno($ch);
 
-		if($errorcode == 0) {
+		if($errorcode === 0) {
 			curl_close($ch);
 			$uid = mb_strtolower($uid);
 			$this->storeUser($uid, $groups);
