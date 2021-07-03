@@ -26,8 +26,8 @@ declare(strict_types=1);
 namespace OCA\User_external\Migration;
 
 use Closure;
-use Doctrine\DBAL\Types\Type;
 use OCP\DB\ISchemaWrapper;
+use OCP\DB\Types;
 use OCP\Migration\IOutput;
 use OCP\Migration\SimpleMigrationStep;
 
@@ -44,17 +44,17 @@ class Version0010Date20200630193751 extends SimpleMigrationStep {
 
 		if (!$schema->hasTable('users_external')) {
 			$table = $schema->createTable('users_external');
-			$table->addColumn('backend', Type::STRING, [
+			$table->addColumn('backend', Types::STRING, [
 				'notnull' => true,
 				'length' => 128,
 				'default' => '',
 			]);
-			$table->addColumn('uid', Type::STRING, [
+			$table->addColumn('uid', Types::STRING, [
 				'notnull' => true,
 				'length' => 64,
 				'default' => '',
 			]);
-			$table->addColumn('displayname', Type::STRING, [
+			$table->addColumn('displayname', Types::STRING, [
 				'notnull' => false,
 				'length' => 64,
 			]);
