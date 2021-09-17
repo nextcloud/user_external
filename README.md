@@ -139,11 +139,12 @@ BasicAuth
 
 Authenticate users by an [HTTP Basic access authentication][BasicAuth_0]  call.
 HTTP server of your choice to authenticate. It should return HTTP 2xx for correct credentials and an appropriate other error code for wrong ones or refused access.
-The HTTP server _must_ respond to any requests to the target URL with the "www-authenticate" header set. 
+By default, the HTTP server _must_ respond to any requests to the target URL with the "www-authenticate" header set. 
 Otherwise BasicAuth considers itself to be misconfigured or the HTTP server unfit for authentication.
+This check can be disabled by passing `true` as the third-argument.
 
 ### Configuration
-The only supported parameter is the URL of the web server where the authentication happens.
+The only mandatory parameter is the URL of the web server where the authentication happens. In addition, there are two optional parameters to configure the authorization header name (defaults to `authorization`) and a boolean to disable the `www-authenticate` header check (use with care!).
 
 **⚠⚠ Warning:** make sure to use the URL of a correctly configured HTTP Basic authenticating server. If the server always responds with a HTTP 2xx response without validating the users, this would allow anyone to log in to your Nextcloud instance with **any username / password combination**. ⚠⚠
 
@@ -153,6 +154,15 @@ Add the following to your `config.php`:
         array(
             'class' => 'OC_User_BasicAuth',
             'arguments' => array('https://example.com/basic_auth'),
+        ),
+    ),
+
+To use a different authorization header and disable the "www-authenticate" header check (for integration with Authelia for example), use the following:
+
+    'user_backends' => array(
+        array(
+            'class' => 'OC_User_BasicAuth',
+            'arguments' => array('https://authelia.example.com/api/verify', 'Proxy-Authorization', true),
         ),
     ),
 
