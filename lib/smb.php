@@ -41,28 +41,26 @@ class OC_User_SMB extends \OCA\user_external\Base{
 		$password = escapeshellarg($password);
 		$command = self::SMBCLIENT.' '.escapeshellarg('//' . $this->host . '/dummy').' -U '.$uidEscaped.'%'.$password;
 		$lastline = exec($command, $output, $retval);
-		if ($retval === 127) {
-			OC::$server->getLogger()->error(
-				'ERROR: smbclient executable missing',
-				['app' => 'user_external']
-			);
-			return false;
-		} else if (strpos($lastline, self::LOGINERROR) !== false) {
-			//normal login error
-			return false;
-		} else if (strpos($lastline, 'NT_STATUS_BAD_NETWORK_NAME') !== false) {
-			//login on minor error
-			goto login;
-		} else if ($retval !== 0) {
-			//some other error
-			OC::$server->getLogger()->error(
-				'ERROR: smbclient error: ' . trim($lastline),
-				['app' => 'user_external']
-			);
-			return false;
+
+		if ( $retval === 0 || strpos($lastline, 'NT_STATUS_BAD_NETWORK_NAME') !== false ) {
+		    return $uid;
 		} else {
-			login:
-			return $uid;
+			switch($retval) {
+				case 127:
+					OC::$server->getLogger()->error(
+						'ERROR: smbclient executable missing',
+						['app' => 'user_external']
+					);        
+					break;
+				default:
+					OC::$server->getLogger()->error(    
+						'ERROR: smbclient error: ' . trim($lastline),
+						['app' => 'user_external']  
+					);
+					break;
+
+			}
+			return false;
 		}
 	}
 
