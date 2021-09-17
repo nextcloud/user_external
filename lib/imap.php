@@ -24,6 +24,7 @@ class OC_User_IMAP extends \OCA\user_external\Base {
 	private $domain;
 	private $stripeDomain;
 	private $groupDomain;
+	private $usernamePrefix;
 
 	/**
 	 * Create new IMAP authentication provider
@@ -34,8 +35,17 @@ class OC_User_IMAP extends \OCA\user_external\Base {
 	 * @param string $domain  If provided, loging will be restricted to this domain
 	 * @param boolean $stripeDomain (whether to stripe the domain part from the username or not)
 	 * @param boolean $groupDomain (whether to add the usere to a group corresponding to the domain of the address)
+	 * @param string $usernamePrefix Prefix to prepend to supplied username
 	 */
-	public function __construct($mailbox, $port = null, $sslmode = null, $domain = null, $stripeDomain = true, $groupDomain = false) {
+	public function __construct(
+		$mailbox,
+		$port = null,
+		$sslmode = null,
+		$domain = null,
+		$stripeDomain = true,
+		$groupDomain = false,
+		$usernamePrefix = ''
+	) {
 		parent::__construct($mailbox);
 		$this->mailbox = $mailbox;
 		$this->port = $port === null ? 143 : $port;
@@ -43,6 +53,7 @@ class OC_User_IMAP extends \OCA\user_external\Base {
 		$this->domain = $domain === null ? '' : $domain;
 		$this->stripeDomain = $stripeDomain;
 		$this->groupDomain = $groupDomain;
+		$this->usernamePrefix = $usernamePrefix;
 	}
 
 	/**
@@ -79,6 +90,7 @@ class OC_User_IMAP extends \OCA\user_external\Base {
 		} else {
 			$username = $uid;
  		}
+		$username = $this->usernamePrefix . $username;
 
 		$groups = [];
 		if ($this->groupDomain && $pieces[1]) {
