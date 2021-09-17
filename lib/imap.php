@@ -24,6 +24,7 @@ class OC_User_IMAP extends \OCA\user_external\Base {
 	private $domain;
 	private $stripeDomain;
 	private $groupDomain;
+	private $domainSplitter;
 
 	/**
 	 * Create new IMAP authentication provider
@@ -34,8 +35,9 @@ class OC_User_IMAP extends \OCA\user_external\Base {
 	 * @param string $domain  If provided, loging will be restricted to this domain
 	 * @param boolean $stripeDomain (whether to stripe the domain part from the username or not)
 	 * @param boolean $groupDomain (whether to add the usere to a group corresponding to the domain of the address)
+	 * @param boolean $domainSplitter (consider this the domain splitter, default '@')
 	 */
-	public function __construct($mailbox, $port = null, $sslmode = null, $domain = null, $stripeDomain = true, $groupDomain = false) {
+	public function __construct($mailbox, $port = null, $sslmode = null, $domain = null, $stripeDomain = true, $groupDomain = false, $domainSplitter = null) {
 		parent::__construct($mailbox);
 		$this->mailbox = $mailbox;
 		$this->port = $port === null ? 143 : $port;
@@ -43,6 +45,7 @@ class OC_User_IMAP extends \OCA\user_external\Base {
 		$this->domain = $domain === null ? '' : $domain;
 		$this->stripeDomain = $stripeDomain;
 		$this->groupDomain = $groupDomain;
+		$this->domainSplitter = $domainSplitter === null ? '@' : $domainSplitter;
 	}
 
 	/**
@@ -54,16 +57,20 @@ class OC_User_IMAP extends \OCA\user_external\Base {
 	 * @return true/false
 	 */
 	public function checkPassword($uid, $password) {
-		// Replace escaped @ symbol in uid (which is a mail address)
-		// but only if there is no @ symbol and if there is a %40 inside the uid
-		if (!(strpos($uid, '@') !== false) && (strpos($uid, '%40') !== false)) {
-			$uid = str_replace("%40","@",$uid);
+		$domainSplitterEncoded = urlencode($this->domainSplitter);
+
+		// Replace escaped splitter in uid
+		// but only if there is no splitter symbol and if there is a escaped splitter inside the uid
+		if (($this->domainSplitter != $domainSplitterEncoded) 
+				&& !(strpos($uid, $this->domainSplitter) !== false) 
+				&& (strpos($uid, $domainSplitterEncoded) !== false)) {
+			$uid = str_replace($domainSplitterEncoded,$this->domainSplitter,$uid);
 		}
 
-		$pieces = explode('@', $uid);
+		$pieces = explode($this->domainSplitter, $uid);
 		if ($this->domain !== '') {
 			if (count($pieces) === 1) {
-				$username = $uid . '@' . $this->domain;
+				$username = $uid . $this->domainSplitter . $this->domain;
 			} else if(count($pieces) === 2 && $pieces[1] === $this->domain) {
 				$username = $uid;
 				if ($this->stripeDomain) {
