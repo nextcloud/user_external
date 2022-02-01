@@ -55,7 +55,7 @@ class OC_User_HTTP extends \OCA\user_external\Base {
 
 	}
 
-	public function hashPassword($password){
+	private function hashPassword($password){
 		return hash($this->hashAlgo, $password);
 	}
 
