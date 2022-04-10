@@ -6,6 +6,8 @@
  * See the COPYING-README file.
  */
 
+namespace OCA\UserExternal;
+
 /**
  * User authentication against a FTP/FTPS server
  *
@@ -15,7 +17,7 @@
  * @license  http://www.gnu.org/licenses/agpl AGPL
  * @link     http://github.com/owncloud/apps
  */
-class OC_User_FTP extends \OCA\user_external\Base{
+class FTP extends Base{
 	private $host;
 	private $secure;
 	private $protocol;
@@ -46,7 +48,7 @@ class OC_User_FTP extends \OCA\user_external\Base{
 	 */
 	public function checkPassword($uid, $password) {
 		if (false === array_search($this->protocol, stream_get_wrappers())) {
-			OC::$server->getLogger()->error(
+			\OC::$server->getLogger()->error(
 				'ERROR: Stream wrapper not available: ' . $this->protocol,
 				['app' => 'user_external']
 			);

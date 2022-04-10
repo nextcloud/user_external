@@ -5,6 +5,7 @@
  * later.
  * See the COPYING-README file.
  */
+namespace OCA\UserExternal;
 
 /**
  * User authentication via samba (smbclient)
@@ -15,7 +16,7 @@
  * @license  http://www.gnu.org/licenses/agpl AGPL
  * @link     http://github.com/owncloud/apps
  */
-class OC_User_SMB extends \OCA\user_external\Base{
+class SMB extends Base{
 	private $host;
 
 	const SMBCLIENT = 'smbclient -L';
@@ -42,7 +43,7 @@ class OC_User_SMB extends \OCA\user_external\Base{
 		$command = self::SMBCLIENT.' '.escapeshellarg('//' . $this->host . '/dummy').' -U '.$uidEscaped.'%'.$password;
 		$lastline = exec($command, $output, $retval);
 		if ($retval === 127) {
-			OC::$server->getLogger()->error(
+			\OC::$server->getLogger()->error(
 				'ERROR: smbclient executable missing',
 				['app' => 'user_external']
 			);
@@ -55,7 +56,7 @@ class OC_User_SMB extends \OCA\user_external\Base{
 			goto login;
 		} else if ($retval !== 0) {
 			//some other error
-			OC::$server->getLogger()->error(
+			\OC::$server->getLogger()->error(
 				'ERROR: smbclient error: ' . trim($lastline),
 				['app' => 'user_external']
 			);

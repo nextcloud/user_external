@@ -1,5 +1,12 @@
 External user authentication
 ============================
+
+**⚠⚠ Warning:** As of Version 3.0 this app uses namespace \OCA\UserExternal now. You MUST change your config to adopt to this change. ⚠⚠
+
+## Usage
+
+Go to Apps-Folder of your Nextcloud Installation
+
 **Authenticate user login against IMAP, SMB, FTP, WebDAV, HTTP BasicAuth, SSH and XMPP**
 
 Passwords are not stored locally; authentication always happens against
@@ -30,7 +37,7 @@ Add the following to `config.php`:
 
     'user_backends' => array(
         array(
-            'class' => 'OC_User_FTP',
+            'class' => '\OCA\UserExternal\FTP',
             'arguments' => array('127.0.0.1'),
         ),
     ),
@@ -39,7 +46,7 @@ To enable SSL connections via `ftps`, append a second parameter `true`:
 
     'user_backends' => array(
         array(
-            'class' => 'OC_User_FTP',
+            'class' => '\OCA\UserExternal\FTP',
             'arguments' => array('127.0.0.1', true),
         ),
     ),
@@ -68,7 +75,7 @@ Add the following to your `config.php`:
 
     'user_backends' => array(
         array(
-            'class' => 'OC_User_IMAP',
+            'class' => '\OCA\UserExternal\IMAP',
             'arguments' => array(
                 '127.0.0.1', 993, 'ssl', 'example.com', true, false
             ),
@@ -104,7 +111,7 @@ Add the following to your `config.php`:
 
     'user_backends' => array(
         array(
-            'class' => 'OC_User_SMB',
+            'class' => '\OCA\UserExternal\SMB',
             'arguments' => array('127.0.0.1'),
         ),
     ),
@@ -128,7 +135,7 @@ Add the following to your `config.php`:
 
     'user_backends' => array(
         array(
-            'class' => '\OCA\User_External\WebDAVAuth',
+            'class' => '\OCA\UserExternal\WebDAVAuth',
             'arguments' => array('https://example.com/webdav'),
         ),
     ),
@@ -151,7 +158,7 @@ Add the following to your `config.php`:
 
     'user_backends' => array(
         array(
-            'class' => 'OC_User_BasicAuth',
+            'class' => '\OCA\UserExternal\BasicAuth',
             'arguments' => array('https://example.com/basic_auth'),
         ),
     ),
@@ -172,7 +179,7 @@ Add the following to your `config.php`:
 
     'user_backends' => array(
         array(
-            'class' => 'OC_User_SSH',
+            'class' => '\OCA\UserExternal\SSH',
             'arguments' => array('127.0.0.1', '22'),
         ),
     ),
@@ -193,7 +200,7 @@ Add the following to your `config.php`:
 
     'user_backends' => array (
         0 => array (
-            'class' => 'OC_User_XMPP',
+            'class' => '\OCA\UserExternal\XMPP',
                 'arguments' => array (
                     0 => 'dbhost',
                     1 => 'prosodydb',
