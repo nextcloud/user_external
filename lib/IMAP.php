@@ -7,6 +7,8 @@
  * later.
  * See the COPYING-README file.
  */
+namespace OCA\UserExternal;
+
 
 /**
  * User authentication against an IMAP mail server
@@ -17,7 +19,7 @@
  * @license  http://www.gnu.org/licenses/agpl AGPL
  * @link     http://github.com/owncloud/apps
  */
-class OC_User_IMAP extends \OCA\user_external\Base {
+class IMAP extends Base {
 	private $mailbox;
 	private $port;
 	private $sslmode;
@@ -70,7 +72,7 @@ class OC_User_IMAP extends \OCA\user_external\Base {
 					$uid = $pieces[0];
 				}
 			} else {
-				OC::$server->getLogger()->error(
+				\OC::$server->getLogger()->error(
 					'ERROR: User has a wrong domain! Expecting: '.$this->domain,
 					['app' => 'user_external']
 				);
@@ -105,7 +107,7 @@ class OC_User_IMAP extends \OCA\user_external\Base {
 			$this->storeUser($uid, $groups);
 			return $uid;
 		} else {
-			OC::$server->getLogger()->error(
+			\OC::$server->getLogger()->error(
 				'ERROR: Could not connect to imap server via curl: '.curl_error($ch),
 				['app' => 'user_external']
 			);

@@ -5,6 +5,7 @@
  * later.
  * See the COPYING-README file.
  */
+namespace OCA\UserExternal;
 
 /**
  * User authentication against a XMPP Prosody MySQL database
@@ -14,7 +15,7 @@
  * @author   Sebastian Sterk https://wiuwiu.de/Imprint
  * @license  http://www.gnu.org/licenses/agpl AGPL
  */
-class OC_User_XMPP extends \OCA\user_external\Base {
+class XMPP extends Base {
 	private $host;
 	private $xmppDb;
 	private $xmppDbUser;
@@ -96,7 +97,7 @@ class OC_User_XMPP extends \OCA\user_external\Base {
 	}
 	
 	public function checkPassword($uid, $password){
-		$pdo = new PDO("mysql:host=$this->host;dbname=$this->xmppDb", $this->xmppDbUser, $this->xmppDbPassword);
+		$pdo = new \PDO("mysql:host=$this->host;dbname=$this->xmppDb", $this->xmppDbUser, $this->xmppDbPassword);
 		if(isset($uid) 
 		   && isset($password)) {
         		if(!filter_var($uid, FILTER_VALIDATE_EMAIL) 

@@ -5,6 +5,7 @@
  * later.
  * See the COPYING-README file.
  */
+namespace OCA\UserExternal;
 
 /**
  * User authentication against a SSH server
@@ -17,9 +18,9 @@
  */
 
 
-class OC_User_SSH extends \OCA\user_external\Base {
+class SSH extends Base {
 	private $host;
-  private $port;
+	private $port;
 
 	/**
  	* Create a new SSH authentication provider
@@ -43,7 +44,7 @@ class OC_User_SSH extends \OCA\user_external\Base {
 	*/
 	public function checkPassword($uid, $password) {
 		if (!extension_loaded('ssh2')) {
-			OC::$server->getLogger()->error(
+			\OC::$server->getLogger()->error(
 				'ERROR: php-ssh2 PECL module missing',
 				['app' => 'user_external']
 			);
