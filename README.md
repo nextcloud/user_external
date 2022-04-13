@@ -1,11 +1,7 @@
 External user authentication
 ============================
 
-**⚠⚠ Warning:** As of Version 3.0 this app uses namespace \OCA\UserExternal now. You MUST change your config to adopt to this change. ⚠⚠
-
-## Usage
-
-Go to Apps-Folder of your Nextcloud Installation
+**⚠⚠ Warning:** As of Version 3.0 this app uses namespace \OCA\UserExternal now. You MUST change your config to adopt to this change. See examples below. ⚠⚠
 
 **Authenticate user login against IMAP, SMB, FTP, WebDAV, HTTP BasicAuth, SSH and XMPP**
 
