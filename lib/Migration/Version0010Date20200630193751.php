@@ -23,7 +23,7 @@ declare(strict_types=1);
  *
  */
 
-namespace OCA\User_external\Migration;
+namespace OCA\UserExternal\Migration;
 
 use Closure;
 use OCP\DB\ISchemaWrapper;
