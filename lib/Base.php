@@ -7,7 +7,7 @@
  * later.
  * See the COPYING-README file.
  */
-namespace OCA\user_external;
+namespace OCA\UserExternal;
 
 /**
  * Base class for external auth implementations that stores users

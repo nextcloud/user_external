@@ -6,7 +6,9 @@
  * See the COPYING-README file.
  */
 
-class OC_User_BasicAuth extends \OCA\user_external\Base {
+namespace OCA\UserExternal;
+
+class BasicAuth extends Base {
 
 	private $authUrl;
 
@@ -36,14 +38,14 @@ class OC_User_BasicAuth extends \OCA\user_external\Base {
 		);
 		$canary = get_headers($this->authUrl, 1, $context);
 		if(!$canary) {
-			OC::$server->getLogger()->error(
+			\OC::$server->getLogger()->error(
 				'ERROR: Not possible to connect to BasicAuth Url: '.$this->authUrl,
 				['app' => 'user_external']
 			);
 			return false;
 		}
 		if (!isset(array_change_key_case($canary, CASE_LOWER)['www-authenticate'])) {
-			OC::$server->getLogger()->error(
+			\OC::$server->getLogger()->error(
 				'ERROR: Mis-configured BasicAuth Url: '.$this->authUrl.', provided URL does not do authentication!',
 				['app' => 'user_external']
 			);
@@ -60,7 +62,7 @@ class OC_User_BasicAuth extends \OCA\user_external\Base {
 		$headers = get_headers($this->authUrl, 1, $context);
 
 		if(!$headers) {
-			OC::$server->getLogger()->error(
+			\OC::$server->getLogger()->error(
 				'ERROR: Not possible to connect to BasicAuth Url: '.$this->authUrl, 
 				['app' => 'user_external']
 			);
@@ -81,7 +83,7 @@ class OC_User_BasicAuth extends \OCA\user_external\Base {
 				$this->storeUser($uid);
 				return $uid;
 			case "3":
-				OC::$server->getLogger()->error(
+				\OC::$server->getLogger()->error(
 					'ERROR: Too many redirects from BasicAuth Url: '.$this->authUrl, 
 					['app' => 'user_external']
 				);
