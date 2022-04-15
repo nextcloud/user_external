@@ -21,7 +21,7 @@ namespace OCA\UserExternal;
  * @license  http://www.gnu.org/licenses/agpl AGPL
  * @link     http://github.com/owncloud/apps
  */
-abstract class Base extends \OC\User\Backend{
+abstract class Base extends \OC\User\Backend {
 	protected $backend = '';
 
 	/**
@@ -80,7 +80,6 @@ abstract class Base extends \OC\User\Backend{
 	 * @return array with all displayNames (value) and the corresponding uids (key)
 	 */
 	public function getDisplayNames($search = '', $limit = null, $offset = null) {
-
 		$connection = \OC::$server->getDatabaseConnection();
 		$query = $connection->getQueryBuilder();
 		$query->select('uid', 'displayname')
@@ -106,10 +105,10 @@ abstract class Base extends \OC\User\Backend{
 	}
 
 	/**
-	* Get a list of all users
-	*
-	* @return array with all uids
-	*/
+	 * Get a list of all users
+	 *
+	 * @return array with all uids
+	 */
 	public function getUsers($search = '', $limit = null, $offset = null) {
 		$connection = \OC::$server->getDatabaseConnection();
 		$query = $connection->getQueryBuilder();
@@ -231,5 +230,4 @@ abstract class Base extends \OC\User\Backend{
 
 		return $users > 0;
 	}
-
 }

@@ -17,7 +17,7 @@ namespace OCA\UserExternal;
  * @license  http://www.gnu.org/licenses/agpl AGPL
  * @link     http://github.com/owncloud/apps
  */
-class FTP extends Base{
+class FTP extends Base {
 	private $host;
 	private $secure;
 	private $protocol;
@@ -28,12 +28,12 @@ class FTP extends Base{
 	 * @param string  $host   Hostname or IP of FTP server
 	 * @param boolean $secure TRUE to enable SSL
 	 */
-	public function __construct($host,$secure=false) {
-		$this->host=$host;
-		$this->secure=$secure;
-		$this->protocol='ftp';
-		if($this->secure) {
-			$this->protocol.='s';
+	public function __construct($host, $secure = false) {
+		$this->host = $host;
+		$this->secure = $secure;
+		$this->protocol = 'ftp';
+		if ($this->secure) {
+			$this->protocol .= 's';
 		}
 		parent::__construct($this->protocol . '://' . $this->host);
 	}
@@ -56,11 +56,11 @@ class FTP extends Base{
 		}
 		// opendir handles the as %-encoded string, but this is not true for usernames and passwords, encode them before passing them
 		$url = sprintf('%s://%s:%s@%s/', $this->protocol, urlencode($uid), urlencode($password), $this->host);
-		$result=@opendir($url);
-		if(is_resource($result)) {
+		$result = @opendir($url);
+		if (is_resource($result)) {
 			$this->storeUser($uid);
 			return $uid;
-		}else{
+		} else {
 			return false;
 		}
 	}

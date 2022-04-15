@@ -9,7 +9,6 @@
  */
 namespace OCA\UserExternal;
 
-
 /**
  * User authentication against an IMAP mail server
  *
@@ -59,14 +58,14 @@ class IMAP extends Base {
 		// Replace escaped @ symbol in uid (which is a mail address)
 		// but only if there is no @ symbol and if there is a %40 inside the uid
 		if (!(strpos($uid, '@') !== false) && (strpos($uid, '%40') !== false)) {
-			$uid = str_replace("%40","@",$uid);
+			$uid = str_replace("%40", "@", $uid);
 		}
 
 		$pieces = explode('@', $uid);
 		if ($this->domain !== '') {
 			if (count($pieces) === 1) {
 				$username = $uid . '@' . $this->domain;
-			} else if(count($pieces) === 2 && $pieces[1] === $this->domain) {
+			} elseif (count($pieces) === 2 && $pieces[1] === $this->domain) {
 				$username = $uid;
 				if ($this->stripeDomain) {
 					$uid = $pieces[0];
@@ -80,11 +79,11 @@ class IMAP extends Base {
 			}
 		} else {
 			$username = $uid;
- 		}
+		}
 
 		$groups = [];
 		if ($this->groupDomain && $pieces[1]) {
-					$groups[] = $pieces[1];
+			$groups[] = $pieces[1];
 		}
 
 		$protocol = ($this->sslmode === "ssl") ? "imaps" : "imap";
@@ -101,7 +100,7 @@ class IMAP extends Base {
 
 		$canconnect = curl_exec($ch);
 
-		if($canconnect) {
+		if ($canconnect) {
 			curl_close($ch);
 			$uid = mb_strtolower($uid);
 			$this->storeUser($uid, $groups);
