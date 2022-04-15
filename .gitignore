@@ -6,3 +6,5 @@ tests/clover.xml
 
 # packaged app
 build/artifacts
+vendor
+.php-cs-fixer.cache

@@ -34,89 +34,89 @@ class XMPP extends Base {
 	}
 
 	public function hmacSha1($key, $data) {
-                if (strlen($key) > 64) {
-                        $key = str_pad(sha1($key, true), 64, chr(0));
+		if (strlen($key) > 64) {
+			$key = str_pad(sha1($key, true), 64, chr(0));
 		}
-                if (strlen($key) < 64) {
-                        $key = str_pad($key, 64, chr(0));
+		if (strlen($key) < 64) {
+			$key = str_pad($key, 64, chr(0));
 		}
 
-                $oPad = str_repeat(chr(0x5C), 64);
-                $iPad = str_repeat(chr(0x36), 64);
+		$oPad = str_repeat(chr(0x5C), 64);
+		$iPad = str_repeat(chr(0x36), 64);
 
-                for ($i = 0; $i < strlen($key); $i++) {
-                        $oPad[$i] = $oPad[$i] ^ $key[$i];
-                        $iPad[$i] = $iPad[$i] ^ $key[$i];
-                }
-                return sha1($oPad.sha1($iPad.$data, true));
-        }
+		for ($i = 0; $i < strlen($key); $i++) {
+			$oPad[$i] = $oPad[$i] ^ $key[$i];
+			$iPad[$i] = $iPad[$i] ^ $key[$i];
+		}
+		return sha1($oPad.sha1($iPad.$data, true));
+	}
 	
-	public function validateHashedPassword($user, $uid, $submittedPassword){
-		foreach ($user as $key){
-	        	if($key[3] === "salt") {
-        	        	$internalSalt = $key['value'];
-                	}
-                	if($key[3] === "server_key") {
-                	        $internalServerKey = $key['value'];
-                	}
-                	if($key[3] === "stored_key") {
-                	        $internalStoredKey = $key['value'];
-                	}
-                }
-                unset($user);
-                $internalIteration = '4096';
-                $newSaltedPassword = hash_pbkdf2('sha1', $submittedPassword, $internalSalt, $internalIteration, 0, true);
-                $newServerKey = $this->hmacSha1($newSaltedPassword, 'Server Key');
-                $newClientKey = $this->hmacSha1($newSaltedPassword, 'Client Key');
-                $newStoredKey = sha1(hex2bin($newClientKey));
+	public function validateHashedPassword($user, $uid, $submittedPassword) {
+		foreach ($user as $key) {
+			if ($key[3] === "salt") {
+				$internalSalt = $key['value'];
+			}
+			if ($key[3] === "server_key") {
+				$internalServerKey = $key['value'];
+			}
+			if ($key[3] === "stored_key") {
+				$internalStoredKey = $key['value'];
+			}
+		}
+		unset($user);
+		$internalIteration = '4096';
+		$newSaltedPassword = hash_pbkdf2('sha1', $submittedPassword, $internalSalt, $internalIteration, 0, true);
+		$newServerKey = $this->hmacSha1($newSaltedPassword, 'Server Key');
+		$newClientKey = $this->hmacSha1($newSaltedPassword, 'Client Key');
+		$newStoredKey = sha1(hex2bin($newClientKey));
 
-                if ($newServerKey === $internalServerKey
- 	               && $newStoredKey === $internalStoredKey) {
-        		$uid = mb_strtolower($uid);
-                        $this->storeUser($uid);
-                        return $uid;
-                } else {
-                	return false;
-                }
+		if ($newServerKey === $internalServerKey
+				   && $newStoredKey === $internalStoredKey) {
+			$uid = mb_strtolower($uid);
+			$this->storeUser($uid);
+			return $uid;
+		} else {
+			return false;
+		}
 	}
 
 	public function validatePlainPassword($user, $uid, $submittedPassword) {
-	        foreach ($user as $key) {
-        	        if($key[3] === "password") {
-                	        $internalPlainPassword = $key['value'];
-                        }
-                }
+		foreach ($user as $key) {
+			if ($key[3] === "password") {
+				$internalPlainPassword = $key['value'];
+			}
+		}
 		unset($user);
-                if ($submittedPassword === $internalPlainPassword) {
-	                $uid = mb_strtolower($uid);
-                        $this->storeUser($uid);
-                        return $uid;
-                } else {
-         	       return false;
-                }
+		if ($submittedPassword === $internalPlainPassword) {
+			$uid = mb_strtolower($uid);
+			$this->storeUser($uid);
+			return $uid;
+		} else {
+			return false;
+		}
 	}
 	
-	public function checkPassword($uid, $password){
+	public function checkPassword($uid, $password) {
 		$pdo = new \PDO("mysql:host=$this->host;dbname=$this->xmppDb", $this->xmppDbUser, $this->xmppDbPassword);
-		if(isset($uid) 
+		if (isset($uid)
 		   && isset($password)) {
-        		if(!filter_var($uid, FILTER_VALIDATE_EMAIL) 
-			   || !strpos($uid, $this->xmppDomain) 
+			if (!filter_var($uid, FILTER_VALIDATE_EMAIL)
+			   || !strpos($uid, $this->xmppDomain)
 			   || substr($uid, -strlen($this->xmppDomain)) !== $this->xmppDomain
 			  ) {
 				return false;
 			}
 			$user = explode("@", $uid);
-        		$userName = strtolower($user[0]);
-        		$submittedPassword = $password;
-        		$statement = $pdo->prepare("SELECT * FROM prosody WHERE user = :user AND host = :xmppDomain AND store = 'accounts'");
-        		$result = $statement->execute(array(
-				'user' => $userName, 
+			$userName = strtolower($user[0]);
+			$submittedPassword = $password;
+			$statement = $pdo->prepare("SELECT * FROM prosody WHERE user = :user AND host = :xmppDomain AND store = 'accounts'");
+			$result = $statement->execute(array(
+				'user' => $userName,
 				'xmppDomain' => $this->xmppDomain
 			));
-        		$user = $statement->fetchAll();
-        		if(empty($user)) {
-                		return false;
+			$user = $statement->fetchAll();
+			if (empty($user)) {
+				return false;
 			}
 			
 			if ($this->passwordHashed === true) {

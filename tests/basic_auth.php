@@ -16,20 +16,20 @@ class Test_User_BasicAuth extends \Test\TestCase {
 		return include(__DIR__.'/config.php');
 	}
 
-	function skip() {
-		$config=$this->getConfig();
+	public function skip() {
+		$config = $this->getConfig();
 		$this->skipUnless($config['basic_auth']['run']);
 	}
 
 	protected function setUp() {
 		parent::setUp();
-		$config=$this->getConfig();
-		$this->instance=new OC_User_BasicAuth($config['basic_auth']['url']);
+		$config = $this->getConfig();
+		$this->instance = new OC_User_BasicAuth($config['basic_auth']['url']);
 	}
 
-	function testLogin() {
-		$config=$this->getConfig();
-		$this->assertEquals($config['basic_auth']['user'],$this->instance->checkPassword($config['basic_auth']['user'],$config['basic_auth']['password']));
-		$this->assertFalse($this->instance->checkPassword($config['basic_auth']['user'],$config['basic_auth']['password'].'foo'));
+	public function testLogin() {
+		$config = $this->getConfig();
+		$this->assertEquals($config['basic_auth']['user'], $this->instance->checkPassword($config['basic_auth']['user'], $config['basic_auth']['password']));
+		$this->assertFalse($this->instance->checkPassword($config['basic_auth']['user'], $config['basic_auth']['password'].'foo'));
 	}
 }

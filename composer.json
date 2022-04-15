@@ -1,0 +1,20 @@
+{
+	"name": "nextcloud/user_external",
+	"config": {
+		"optimize-autoloader": true,
+		"classmap-authoritative": true,
+		"platform": {
+			"php": "7.3"
+		}
+	},
+	"scripts": {
+		"cs:fix": "php-cs-fixer fix",
+		"cs:check": "php-cs-fixer fix --dry-run --diff",
+		"lint": "find . -name \\*.php -not -path './vendor/*' -print0 | xargs -0 -n1 php -l"
+	},
+	"require-dev": {
+		"nextcloud/coding-standard": "^1.0.0",
+		"phpunit/phpunit": "^9.5",
+		"christophwurst/nextcloud_testing": "^0.12.4"
+	}
+}

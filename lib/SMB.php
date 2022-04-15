@@ -16,11 +16,11 @@ namespace OCA\UserExternal;
  * @license  http://www.gnu.org/licenses/agpl AGPL
  * @link     http://github.com/owncloud/apps
  */
-class SMB extends Base{
+class SMB extends Base {
 	private $host;
 
-	const SMBCLIENT = 'smbclient -L';
-	const LOGINERROR = 'NT_STATUS_LOGON_FAILURE';
+	public const SMBCLIENT = 'smbclient -L';
+	public const LOGINERROR = 'NT_STATUS_LOGON_FAILURE';
 
 	/**
 	 * Create new samba authentication provider
@@ -29,7 +29,7 @@ class SMB extends Base{
 	 */
 	public function __construct($host) {
 		parent::__construct($host);
-		$this->host=$host;
+		$this->host = $host;
 	}
 
 	/**
@@ -48,13 +48,13 @@ class SMB extends Base{
 				['app' => 'user_external']
 			);
 			return false;
-		} else if (strpos($lastline, self::LOGINERROR) !== false) {
+		} elseif (strpos($lastline, self::LOGINERROR) !== false) {
 			//normal login error
 			return false;
-		} else if (strpos($lastline, 'NT_STATUS_BAD_NETWORK_NAME') !== false) {
+		} elseif (strpos($lastline, 'NT_STATUS_BAD_NETWORK_NAME') !== false) {
 			//login on minor error
 			goto login;
-		} else if ($retval !== 0) {
+		} elseif ($retval !== 0) {
 			//some other error
 			\OC::$server->getLogger()->error(
 				'ERROR: smbclient error: ' . trim($lastline),
@@ -78,13 +78,13 @@ class SMB extends Base{
 	public function checkPassword($uid, $password) {
 		// Check with an invalid password, if the user authenticates then fail
 		$attemptWithInvalidPassword = $this->tryAuthentication($uid, base64_encode($password));
-		if(is_string($attemptWithInvalidPassword)) {
+		if (is_string($attemptWithInvalidPassword)) {
 			return false;
 		}
 
 		// Check with valid password
 		$attemptWithValidPassword = $this->tryAuthentication($uid, $password);
-		if(is_string($attemptWithValidPassword)) {
+		if (is_string($attemptWithValidPassword)) {
 			$this->storeUser($uid);
 			return $uid;
 		}

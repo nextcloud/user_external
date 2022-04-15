@@ -9,12 +9,11 @@
 namespace OCA\UserExternal;
 
 class BasicAuth extends Base {
-
 	private $authUrl;
 
 	public function __construct($authUrl) {
 		parent::__construct($authUrl);
-		$this->authUrl =$authUrl;
+		$this->authUrl = $authUrl;
 	}
 
 	/**
@@ -31,13 +30,13 @@ class BasicAuth extends Base {
 		 * URL is indeed authenticating or not...
 		 */
 		$context = stream_context_create(array(
-		  'http' => array(
-		    'method' => "GET",
-		    'follow_location' => 0
-		  ))
+			'http' => array(
+				'method' => "GET",
+				'follow_location' => 0
+			))
 		);
 		$canary = get_headers($this->authUrl, 1, $context);
-		if(!$canary) {
+		if (!$canary) {
 			\OC::$server->getLogger()->error(
 				'ERROR: Not possible to connect to BasicAuth Url: '.$this->authUrl,
 				['app' => 'user_external']
@@ -53,17 +52,17 @@ class BasicAuth extends Base {
 		}
 
 		$context = stream_context_create(array(
-		  'http' => array(
-		    'method' => "GET",
-		    'header' => "authorization: Basic " . base64_encode("$uid:$password"),
-		    'follow_location' => 0
-		  ))
+			'http' => array(
+				'method' => "GET",
+				'header' => "authorization: Basic " . base64_encode("$uid:$password"),
+				'follow_location' => 0
+			))
 		);
 		$headers = get_headers($this->authUrl, 1, $context);
 
-		if(!$headers) {
+		if (!$headers) {
 			\OC::$server->getLogger()->error(
-				'ERROR: Not possible to connect to BasicAuth Url: '.$this->authUrl, 
+				'ERROR: Not possible to connect to BasicAuth Url: '.$this->authUrl,
 				['app' => 'user_external']
 			);
 			return false;
@@ -84,7 +83,7 @@ class BasicAuth extends Base {
 				return $uid;
 			case "3":
 				\OC::$server->getLogger()->error(
-					'ERROR: Too many redirects from BasicAuth Url: '.$this->authUrl, 
+					'ERROR: Too many redirects from BasicAuth Url: '.$this->authUrl,
 					['app' => 'user_external']
 				);
 				return false;

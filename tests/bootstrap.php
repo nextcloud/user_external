@@ -1,4 +1,5 @@
 <?php
+
 if (!defined('PHPUNIT_RUN')) {
 	define('PHPUNIT_RUN', 1);
 }
@@ -9,7 +10,7 @@ if (!class_exists('\PHPUnit\Framework\TestCase')) {
 \OC_App::loadApp('user_external');
 
 $dummyClass = \OC::$SERVERROOT . '/tests/lib/Util/User/Dummy.php';
-if(file_exists($dummyClass)) {
+if (file_exists($dummyClass)) {
 	require_once($dummyClass);
 }
 OC_Hook::clear();
