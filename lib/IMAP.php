@@ -34,16 +34,19 @@ class IMAP extends Base {
 	 * @param string $sslmode
 	 * @param string $domain  If provided, loging will be restricted to this domain
 	 * @param boolean $stripeDomain (whether to stripe the domain part from the username or not)
-	 * @param boolean $groupDomain (whether to add the usere to a group corresponding to the domain of the address)
+     * @param boolean $groupDomain (whether to add the usere to a group corresponding to the domain of the address)
+     * @param string $loginOptions set login options (for example authorization method AUTH=PLAIN, AUTH=DIGEST-MD5, AUTH=NTLM, AUTH=GSSAPI, AUTH=AUTO, AUTH=* and more)
+
 	 */
-	public function __construct($mailbox, $port = null, $sslmode = null, $domain = null, $stripeDomain = true, $groupDomain = false) {
+	public function __construct($mailbox, $port = null, $sslmode = null, $domain = null, $stripeDomain = true, $groupDomain = false, loginOptions = null) {
 		parent::__construct($mailbox);
 		$this->mailbox = $mailbox;
 		$this->port = $port === null ? 143 : $port;
 		$this->sslmode = $sslmode;
 		$this->domain = $domain === null ? '' : $domain;
 		$this->stripeDomain = $stripeDomain;
-		$this->groupDomain = $groupDomain;
+        $this->groupDomain = $groupDomain;
+        $this->loginOptions = $loginOptions;
 	}
 
 	/**
@@ -97,6 +100,10 @@ class IMAP extends Base {
 		curl_setopt($ch, CURLOPT_USERPWD, $username.":".$password);
 		curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 10);
 		curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'CAPABILITY');
+
+        if (is_string($this->loginOptions)) {
+			curl_setopt($ch, CURLOPT_LOGIN_OPTIONS, $this->loginOptions);
+        }
 
 		$canconnect = curl_exec($ch);
 
