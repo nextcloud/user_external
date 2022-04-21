@@ -45,8 +45,8 @@ class IMAP extends Base {
 		$this->sslmode = $sslmode;
 		$this->domain = $domain === null ? '' : $domain;
 		$this->stripeDomain = $stripeDomain;
-        $this->groupDomain = $groupDomain;
-        $this->loginOptions = $loginOptions;
+		$this->groupDomain = $groupDomain;
+		$this->loginOptions = $loginOptions;
 	}
 
 	/**
@@ -101,9 +101,9 @@ class IMAP extends Base {
 		curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 10);
 		curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'CAPABILITY');
 
-        if (is_string($this->loginOptions)) {
+		if (is_string($this->loginOptions)) {
 			curl_setopt($ch, CURLOPT_LOGIN_OPTIONS, $this->loginOptions);
-        }
+		}
 
 		$canconnect = curl_exec($ch);
 
