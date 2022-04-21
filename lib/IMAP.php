@@ -34,8 +34,8 @@ class IMAP extends Base {
 	 * @param string $sslmode
 	 * @param string $domain  If provided, loging will be restricted to this domain
 	 * @param boolean $stripeDomain (whether to stripe the domain part from the username or not)
-     * @param boolean $groupDomain (whether to add the usere to a group corresponding to the domain of the address)
-     * @param string $loginOptions set login options (for example authorization method AUTH=PLAIN, AUTH=DIGEST-MD5, AUTH=NTLM, AUTH=GSSAPI, AUTH=AUTO, AUTH=* and more)
+	 * @param boolean $groupDomain (whether to add the usere to a group corresponding to the domain of the address)
+	 * @param string $loginOptions set login options (for example authorization method AUTH=PLAIN, AUTH=DIGEST-MD5, AUTH=NTLM, AUTH=GSSAPI, AUTH=AUTO, AUTH=* and more)
 
 	 */
 	public function __construct($mailbox, $port = null, $sslmode = null, $domain = null, $stripeDomain = true, $groupDomain = false, $loginOptions = null) {
