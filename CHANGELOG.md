@@ -5,6 +5,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
+
+## [3.0.0] - 2022-04-26
 ### Breaking Changes
 - Namespace change: ⚠This requires configuration changes to be applied to your config.php.⚠\
   Specifically the `class` attribute needs to be changed to the full class path starting with `\OCA\UserExternal\` and ending with the name of the specific authentication backend you use (e.g. IMAP or FTP). Check the [README.md](https://github.com/nextcloud/user_external#readme) for the concrete value you have to set.
