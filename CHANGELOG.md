@@ -6,6 +6,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [3.1.0] - 2022-12-27
+- Support for Nextcloud 25
+  [#212](https://github.com/nextcloud/user_external/pull/212) @michael-dev
+
 ## [3.0.0] - 2022-04-26
 ### Breaking Changes
 - Namespace change: ⚠This requires configuration changes to be applied to your config.php.⚠\
