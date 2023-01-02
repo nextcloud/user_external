@@ -100,13 +100,10 @@ class IMAP extends Base {
 		curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 10);
 		curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'CAPABILITY');
 
-		if (is_string($this->loginOptions)) {
-			curl_setopt($ch, CURLOPT_LOGIN_OPTIONS, $this->loginOptions);
-		}
+    curl_exec($ch);
+		$errorcode = curl_errno($ch);
 
-		$canconnect = curl_exec($ch);
-
-		if ($canconnect) {
+		if ($errorcode === 0) {
 			curl_close($ch);
 			$uid = mb_strtolower($uid);
 			$this->storeUser($uid, $groups);
