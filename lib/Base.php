@@ -66,7 +66,7 @@ abstract class Base extends \OC\User\Backend {
 		$user = $result->fetch();
 		$result->closeCursor();
 
-		$displayName = trim($user['displayname'], ' ');
+		$displayName = trim($user['displayname'] ?? '', ' ');
 		if (!empty($displayName)) {
 			return $displayName;
 		} else {
