@@ -131,8 +131,11 @@ Add the following to your `config.php`:
 
     'user_backends' => array(
         array(
-            'class' => '\OCA\UserExternal\WebDAVAuth',
-            'arguments' => array('https://example.com/webdav'),
+            'class' => '\OCA\UserExternal\WebDavAuth',
+            'arguments' => array(
+                'https://example.com/webdav',
+                'basic',  // alternative: 'digest'
+            ),
         ),
     ),
 
