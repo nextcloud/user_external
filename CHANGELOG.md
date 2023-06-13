@@ -4,9 +4,11 @@ Starting from v3.0.0, all notable changes to this project will be documented in 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [Unreleased]
+## [3.2.0] - 2023-06-13
 - Fix IMAP authentication on empty mailboxes
   [#164](https://github.com/nextcloud/user_external/pull/164) @tem-hth
+- Trim doesn't accept null anymore
+  [#217](https://github.com/nextcloud/user_external/pull/217) @Glandos
 
 ## [3.1.0] - 2022-12-27
 - Support for Nextcloud 25
