@@ -82,7 +82,7 @@ class IMAP extends Base {
 		}
 
 		$groups = [];
-		if ($this->groupDomain && $pieces[1]) {
+		if ((count($pieces) > 1) && $this->groupDomain && $pieces[1]) {
 			$groups[] = $pieces[1];
 		}
 
