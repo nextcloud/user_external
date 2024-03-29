@@ -19,7 +19,7 @@ If something does not work, check the log file at `nextcloud/data/nextcloud.log`
 **⚠⚠ Warning:** If you are using more than one backend or especially one backend more often than once, make sure that you still have resp. get unique `uid`s in the database. ⚠⚠
 
 **⚠⚠ Warning:** If you are using tools like fail2ban (https://www.fail2ban.org) to protect your authentication source (e.g. IMAP server), be sure to disable it for the host that runs `user_external`. Otherwise a single user failing to login too many times can practically DoS your whole Nextcloud installation because `fail2ban` will then block the Nextcloud IP address. ⚠⚠
-Instead, install appropriate protection apps within Nextcloud that bans repeated failed login attempts.
+Instead, make sure the bruteforce protection app for Nextcloud is installed and configured correctly.
 
 FTP
 ---
