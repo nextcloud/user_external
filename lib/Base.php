@@ -216,7 +216,7 @@ abstract class Base extends \OC\User\Backend {
 	/**
 	 * Count the number of users.
 	 *
-	 * @return int|bool The number of users on success false on failure
+	 * @return int the number of users
 	 */
 	public function countUsers() {
 		$connection = \OC::$server->getDatabaseConnection();
@@ -228,6 +228,6 @@ abstract class Base extends \OC\User\Backend {
 		$users = $result->fetchColumn();
 		$result->closeCursor();
 
-		return $users > 0;
+		return $users;
 	}
 }
