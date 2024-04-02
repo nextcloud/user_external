@@ -106,9 +106,29 @@ class IMAP extends Base {
 			$uid = mb_strtolower($uid);
 			$this->storeUser($uid, $groups);
 			return $uid;
+		} elseif ($errorcode === CURLE_COULDNT_CONNECT ||
+			   $errorcode === CURLE_SSL_CONNECT_ERROR ||
+			   $errorcode === 28) {
+			# This is not defined in PHP-8.x
+			# 28: CURLE_OPERATION_TIMEDOUT
+			\OC::$server->getLogger()->error(
+				'ERROR: Could not connect to imap server via curl: ' .  curl_strerror($errorcode),
+				['app' => 'user_external']
+			);
+		} elseif ($errorcode === 9 ||
+			   $errorcode === 67 ||
+			   $errorcode === 94) {
+			# These are not defined in PHP-8.x
+			# 9: CURLE_REMOTE_ACCESS_DENIED
+			# 67: CURLE_LOGIN_DENIED
+			# 94: CURLE_AUTH_ERROR)
+			\OC::$server->getLogger()->error(
+				'ERROR: IMAP Login failed via curl: ' .  curl_strerror($errorcode),
+				['app' => 'user_external']
+			);
 		} else {
 			\OC::$server->getLogger()->error(
-				'ERROR: Could not connect to imap server via curl: '.curl_error($ch),
+			'ERROR: IMAP server returned an error: ' . $errorcode . ' / ' . curl_strerror($errorcode),
 				['app' => 'user_external']
 			);
 		}
