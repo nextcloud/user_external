@@ -101,8 +101,8 @@ class IMAP extends Base {
 		curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'CAPABILITY');
 
 		if (is_string($this->loginOptions)) {
-                       curl_setopt($ch, CURLOPT_LOGIN_OPTIONS, $this->loginOptions);
-                }
+			curl_setopt($ch, CURLOPT_LOGIN_OPTIONS, $this->loginOptions);
+		}
 
 		curl_exec($ch);
 		$errorcode = curl_errno($ch);
