@@ -4,6 +4,16 @@ Starting from v3.0.0, all notable changes to this project will be documented in 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [3.4.0] - 
+- Fix out-of-bound array access in IMAP backend 
+  [#229](https://github.com/nextcloud/user_external/pull/229) @BjoKaSH
+- Distinguish wrong credentials from other problems in logging output for IMAP backend
+  [#228](https://github.com/nextcloud/user_external/pull/228) @BjoKaSH
+- 🐛 FIX: wrong user count
+  [#249](https://github.com/nextcloud/user_external/pull/249)
+- Make compatible with Nextcloud 29
+  [#256](https://github.com/nextcloud/user_external/pull/256)
+
 ## [3.3.0] - 2024-03-30
 - Fix wrong capitalisation of `WebDavAuth` class name in readme
   [#238](https://github.com/nextcloud/user_external/pull/238) @pierrecorsini

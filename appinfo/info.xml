@@ -16,7 +16,7 @@
 
 Read the [documentation](https://github.com/nextcloud/user_external#readme) to learn how to configure it!
     ]]></description>
-	<version>3.3.0</version>
+	<version>3.4.0</version>
 	<licence>agpl</licence>
 	<author>Robin Appelman</author>
 	<namespace>UserExternal</namespace>
@@ -33,6 +33,6 @@ Read the [documentation](https://github.com/nextcloud/user_external#readme) to l
 	<bugs>https://github.com/nextcloud/user_external/issues</bugs>
 	<repository type="git">https://github.com/nextcloud/user_external.git</repository>
 	<dependencies>
-		<nextcloud min-version="25" max-version="28" />
+		<nextcloud min-version="25" max-version="29" />
 	</dependencies>
 </info>
