@@ -48,7 +48,7 @@ class FTP extends Base {
 	 */
 	public function checkPassword($uid, $password) {
 		if (false === array_search($this->protocol, stream_get_wrappers())) {
-			\OC::$server->getLogger()->error(
+			$this->logger->error(
 				'ERROR: Stream wrapper not available: ' . $this->protocol,
 				['app' => 'user_external']
 			);
