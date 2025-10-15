@@ -32,4 +32,12 @@ return array(
 		'user' => 'test',//valid username/password combination
 		'password' => 'test',
 	),
+	'http' => array(
+		'run' => false,
+		'endpoint' => 'http://localhost/http_auth',
+		'hashAlgo' => false, // or 'md5', 'sha1', etc.
+		'accessKey' => 'your_access_key',
+		'user' => 'test',//valid username/password combination
+		'password' => 'test',
+	),
 );

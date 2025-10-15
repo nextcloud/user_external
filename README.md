@@ -165,6 +165,56 @@ Add the following to your `config.php`:
 [BasicAuth_0]: https://en.wikipedia.org/wiki/Basic_access_authentication
 
 
+HTTP (Generic HTTP Auth Interface)
+------
+
+Authenticate users against a generic HTTP authentication interface. This backend sends HTTP POST requests with user credentials to a configured endpoint and expects specific response codes for authentication validation.
+
+### Configuration
+The HTTP backend accepts three parameters: endpoint URL, optional hash algorithm, and optional access key.
+
+**⚠⚠ Warning:** make sure to use the URL of a correctly configured HTTP authentication server. The server must validate credentials properly and return HTTP 202 for successful authentication. ⚠⚠
+
+Add the following to your `config.php`:
+
+    'user_backends' => array(
+        array(
+            'class' => '\OCA\UserExternal\HTTP',
+            'arguments' => array('https://example.com/auth_endpoint'),
+        ),
+    ),
+
+For password hashing (e.g., MD5, SHA1, SHA256), add the hash algorithm as second parameter:
+
+    'user_backends' => array(
+        array(
+            'class' => '\OCA\UserExternal\HTTP',
+            'arguments' => array('https://example.com/auth_endpoint', 'md5'),
+        ),
+    ),
+
+For additional security with an access key:
+
+    'user_backends' => array(
+        array(
+            'class' => '\OCA\UserExternal\HTTP',
+            'arguments' => array('https://example.com/auth_endpoint', 'sha1', 'your_secret_access_key'),
+        ),
+    ),
+
+### HTTP Request Format
+The backend sends POST requests with the following parameters:
+- `user`: The username
+- `password`: The password (hashed if hash algorithm is specified)
+- `accessKey`: The access key (if provided)
+
+### Expected Response
+The HTTP server must return HTTP status code **202** for successful authentication. Any other status code is treated as authentication failure.
+
+### Dependencies
+Uses Nextcloud's built-in HTTP client service (no additional dependencies required).
+
+
 SSH
 ---
 
