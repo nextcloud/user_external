@@ -43,7 +43,7 @@ class SMB extends Base {
 		$command = self::SMBCLIENT.' '.escapeshellarg('//' . $this->host . '/dummy').' -U '.$uidEscaped.'%'.$password;
 		$lastline = exec($command, $output, $retval);
 		if ($retval === 127) {
-			\OC::$server->getLogger()->error(
+			$this->logger->error(
 				'ERROR: smbclient executable missing',
 				['app' => 'user_external']
 			);
@@ -56,7 +56,7 @@ class SMB extends Base {
 			goto login;
 		} elseif ($retval !== 0) {
 			//some other error
-			\OC::$server->getLogger()->error(
+			$this->logger->error(
 				'ERROR: smbclient error: ' . trim($lastline),
 				['app' => 'user_external']
 			);

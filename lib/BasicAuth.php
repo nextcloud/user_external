@@ -37,14 +37,14 @@ class BasicAuth extends Base {
 		);
 		$canary = get_headers($this->authUrl, 1, $context);
 		if (!$canary) {
-			\OC::$server->getLogger()->error(
+			$this->logger->error(
 				'ERROR: Not possible to connect to BasicAuth Url: '.$this->authUrl,
 				['app' => 'user_external']
 			);
 			return false;
 		}
 		if (!isset(array_change_key_case($canary, CASE_LOWER)['www-authenticate'])) {
-			\OC::$server->getLogger()->error(
+			$this->logger->error(
 				'ERROR: Mis-configured BasicAuth Url: '.$this->authUrl.', provided URL does not do authentication!',
 				['app' => 'user_external']
 			);
@@ -61,7 +61,7 @@ class BasicAuth extends Base {
 		$headers = get_headers($this->authUrl, 1, $context);
 
 		if (!$headers) {
-			\OC::$server->getLogger()->error(
+			$this->logger->error(
 				'ERROR: Not possible to connect to BasicAuth Url: '.$this->authUrl,
 				['app' => 'user_external']
 			);
@@ -82,7 +82,7 @@ class BasicAuth extends Base {
 				$this->storeUser($uid);
 				return $uid;
 			case "3":
-				\OC::$server->getLogger()->error(
+				$this->logger->error(
 					'ERROR: Too many redirects from BasicAuth Url: '.$this->authUrl,
 					['app' => 'user_external']
 				);

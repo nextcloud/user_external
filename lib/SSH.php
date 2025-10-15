@@ -44,7 +44,7 @@ class SSH extends Base {
 	 */
 	public function checkPassword($uid, $password) {
 		if (!extension_loaded('ssh2')) {
-			\OC::$server->getLogger()->error(
+			$this->logger->error(
 				'ERROR: php-ssh2 PECL module missing',
 				['app' => 'user_external']
 			);

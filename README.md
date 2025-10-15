@@ -225,4 +225,3 @@ Alternatives
 Other extensions allow connecting to external user databases directly via SQL, which may be faster:
 
 * [user_sql](https://github.com/nextcloud/user_sql)
-* [user_backend_sql_raw](https://github.com/PanCakeConnaisseur/user_backend_sql_raw)
