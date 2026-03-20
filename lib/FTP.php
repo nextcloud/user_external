@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Copyright (c) 2012 Robin Appelman <icewind@owncloud.com>
  * This file is licensed under the Affero General Public License version 3 or
@@ -25,7 +26,7 @@ class FTP extends Base {
 	/**
 	 * Create new FTP authentication provider
 	 *
-	 * @param string  $host   Hostname or IP of FTP server
+	 * @param string $host Hostname or IP of FTP server
 	 * @param boolean $secure TRUE to enable SSL
 	 */
 	public function __construct($host, $secure = false) {
@@ -41,13 +42,15 @@ class FTP extends Base {
 	/**
 	 * Check if the password is correct without logging in the user
 	 *
-	 * @param string $uid      The username
+	 * @param string $uid The username
 	 * @param string $password The password
 	 *
 	 * @return true/false
 	 */
 	public function checkPassword($uid, $password) {
-		if (false === array_search($this->protocol, stream_get_wrappers())) {
+		$uid = $this->resolveUid($uid);
+
+		if (array_search($this->protocol, stream_get_wrappers()) === false) {
 			$this->logger->error(
 				'ERROR: Stream wrapper not available: ' . $this->protocol,
 				['app' => 'user_external']
