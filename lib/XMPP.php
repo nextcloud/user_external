@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Copyright (c) 2019 Sebastian Sterk <sebastian@wiuwiu.de>
  * This file is licensed under the Affero General Public License version 3 or
@@ -48,18 +49,18 @@ class XMPP extends Base {
 			$oPad[$i] = $oPad[$i] ^ $key[$i];
 			$iPad[$i] = $iPad[$i] ^ $key[$i];
 		}
-		return sha1($oPad.sha1($iPad.$data, true));
+		return sha1($oPad . sha1($iPad . $data, true));
 	}
-	
+
 	public function validateHashedPassword($user, $uid, $submittedPassword) {
 		foreach ($user as $key) {
-			if ($key[3] === "salt") {
+			if ($key[3] === 'salt') {
 				$internalSalt = $key['value'];
 			}
-			if ($key[3] === "server_key") {
+			if ($key[3] === 'server_key') {
 				$internalServerKey = $key['value'];
 			}
-			if ($key[3] === "stored_key") {
+			if ($key[3] === 'stored_key') {
 				$internalStoredKey = $key['value'];
 			}
 		}
@@ -82,7 +83,7 @@ class XMPP extends Base {
 
 	public function validatePlainPassword($user, $uid, $submittedPassword) {
 		foreach ($user as $key) {
-			if ($key[3] === "password") {
+			if ($key[3] === 'password') {
 				$internalPlainPassword = $key['value'];
 			}
 		}
@@ -95,7 +96,7 @@ class XMPP extends Base {
 			return false;
 		}
 	}
-	
+
 	public function checkPassword($uid, $password) {
 		$pdo = new \PDO("mysql:host=$this->host;dbname=$this->xmppDb", $this->xmppDbUser, $this->xmppDbPassword);
 		if (isset($uid)
@@ -103,22 +104,22 @@ class XMPP extends Base {
 			if (!filter_var($uid, FILTER_VALIDATE_EMAIL)
 			   || !strpos($uid, $this->xmppDomain)
 			   || substr($uid, -strlen($this->xmppDomain)) !== $this->xmppDomain
-			  ) {
+			) {
 				return false;
 			}
-			$user = explode("@", $uid);
+			$user = explode('@', $uid);
 			$userName = strtolower($user[0]);
 			$submittedPassword = $password;
 			$statement = $pdo->prepare("SELECT * FROM prosody WHERE user = :user AND host = :xmppDomain AND store = 'accounts'");
-			$result = $statement->execute(array(
+			$result = $statement->execute([
 				'user' => $userName,
 				'xmppDomain' => $this->xmppDomain
-			));
+			]);
 			$user = $statement->fetchAll();
 			if (empty($user)) {
 				return false;
 			}
-			
+
 			if ($this->passwordHashed === true) {
 				return $this->validateHashedPassword($user, $uid, $submittedPassword);
 			} else {

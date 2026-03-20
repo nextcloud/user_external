@@ -2,19 +2,45 @@
 	"name": "nextcloud/user_external",
 	"config": {
 		"optimize-autoloader": true,
-		"classmap-authoritative": true,
 		"platform": {
-			"php": "7.3"
+			"php": "8.1"
+		},
+		"sort-packages": true,
+		"allow-plugins": {
+			"bamarni/composer-bin-plugin": true
+		}
+	},
+	"autoload": {
+		"psr-4": {
+			"OCA\\UserExternal\\": "lib/"
+		}
+	},
+	"autoload-dev": {
+		"psr-4": {
+			"OCA\\UserExternal\\Tests\\": "tests/"
 		}
 	},
 	"scripts": {
-		"cs:fix": "php-cs-fixer fix",
+		"lint": "find . -name \\*.php -not -path './vendor/*' -not -path './vendor-bin/*' -print0 | xargs -0 -n1 php -l",
 		"cs:check": "php-cs-fixer fix --dry-run --diff",
-		"lint": "find . -name \\*.php -not -path './vendor/*' -print0 | xargs -0 -n1 php -l"
+		"cs:fix": "php-cs-fixer fix",
+		"test:unit": "phpunit -c tests/phpunit.xml --testsuite 'user_external unit tests' --color --fail-on-warning --fail-on-risky",
+		"test:integration": "phpunit -c tests/phpunit.xml --testsuite 'user_external integration tests' --color --fail-on-warning --fail-on-risky",
+		"post-install-cmd": [
+			"[ $COMPOSER_DEV_MODE -eq 0 ] || composer bin all install --ansi"
+		],
+		"post-update-cmd": [
+			"[ $COMPOSER_DEV_MODE -eq 0 ] || composer bin all update --ansi"
+		]
 	},
 	"require-dev": {
-		"nextcloud/coding-standard": "^1.0.0",
-		"phpunit/phpunit": "^9.5",
-		"christophwurst/nextcloud_testing": "^0.12.4"
+		"bamarni/composer-bin-plugin": "^1.8",
+		"nextcloud/coding-standard": "^1.0.0"
+	},
+	"extra": {
+		"bamarni-bin": {
+			"bin-links": true,
+			"forward-command": false
+		}
 	}
 }

@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Copyright (c) 2018 David Fullard <dave@theinternetmonkey.com>
  * This file is licensed under the Affero General Public License version 3 or
@@ -37,12 +38,14 @@ class SSH extends Base {
 	 * Check if the password is correct without logging in
 	 * Requires the php-ssh2 pecl extension
 	 *
-	 * @param string $uid      The username
+	 * @param string $uid The username
 	 * @param string $password The password
 	 *
 	 * @return true/false
 	 */
 	public function checkPassword($uid, $password) {
+		$uid = $this->resolveUid($uid);
+
 		if (!extension_loaded('ssh2')) {
 			$this->logger->error(
 				'ERROR: php-ssh2 PECL module missing',
