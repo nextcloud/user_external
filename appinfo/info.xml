@@ -35,4 +35,8 @@ Read the [documentation](https://github.com/nextcloud/user_external#readme) to l
 	<dependencies>
 		<nextcloud min-version="31" max-version="32" />
 	</dependencies>
+	<settings>
+		<admin>OCA\UserExternal\Settings\Admin</admin>
+		<admin-section>OCA\UserExternal\Settings\AdminSection</admin-section>
+	</settings>
 </info>
