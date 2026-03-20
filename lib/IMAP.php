@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @author Robin Appelman <icewind@owncloud.com>
  * @author Jonas Sulzer <jonas@violoncello.ch>
@@ -32,7 +33,7 @@ class IMAP extends Base {
 	 * @param string $mailbox IMAP server domain/IP
 	 * @param int $port IMAP server $port
 	 * @param string $sslmode
-	 * @param string $domain  If provided, loging will be restricted to this domain
+	 * @param string $domain If provided, loging will be restricted to this domain
 	 * @param boolean $stripeDomain (whether to stripe the domain part from the username or not)
 	 * @param boolean $groupDomain (whether to add the usere to a group corresponding to the domain of the address)
 	 */
@@ -49,16 +50,18 @@ class IMAP extends Base {
 	/**
 	 * Check if the password is correct without logging in the user
 	 *
-	 * @param string $uid      The username
+	 * @param string $uid The username
 	 * @param string $password The password
 	 *
 	 * @return true/false
 	 */
 	public function checkPassword($uid, $password) {
+		$uid = $this->resolveUid($uid);
+
 		// Replace escaped @ symbol in uid (which is a mail address)
 		// but only if there is no @ symbol and if there is a %40 inside the uid
 		if (!(strpos($uid, '@') !== false) && (strpos($uid, '%40') !== false)) {
-			$uid = str_replace("%40", "@", $uid);
+			$uid = str_replace('%40', '@', $uid);
 		}
 
 		$pieces = explode('@', $uid);
@@ -72,7 +75,7 @@ class IMAP extends Base {
 				}
 			} else {
 				$this->logger->error(
-					'ERROR: User has a wrong domain! Expecting: '.$this->domain,
+					'ERROR: User has a wrong domain! Expecting: ' . $this->domain,
 					['app' => 'user_external']
 				);
 				return false;
@@ -86,7 +89,7 @@ class IMAP extends Base {
 			$groups[] = $pieces[1];
 		}
 
-		$protocol = ($this->sslmode === "ssl") ? "imaps" : "imap";
+		$protocol = ($this->sslmode === 'ssl') ? 'imaps' : 'imap';
 		$url = "{$protocol}://{$this->mailbox}:{$this->port}";
 		$ch = curl_init();
 		if ($this->sslmode === 'tls') {
@@ -94,7 +97,7 @@ class IMAP extends Base {
 		}
 		curl_setopt($ch, CURLOPT_URL, $url);
 		curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-		curl_setopt($ch, CURLOPT_USERPWD, $username.":".$password);
+		curl_setopt($ch, CURLOPT_USERPWD, $username . ':' . $password);
 		curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 10);
 		curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'CAPABILITY');
 
@@ -106,29 +109,29 @@ class IMAP extends Base {
 			$uid = mb_strtolower($uid);
 			$this->storeUser($uid, $groups);
 			return $uid;
-		} elseif ($errorcode === CURLE_COULDNT_CONNECT ||
-			   $errorcode === CURLE_SSL_CONNECT_ERROR ||
-			   $errorcode === 28) {
+		} elseif ($errorcode === CURLE_COULDNT_CONNECT
+			   || $errorcode === CURLE_SSL_CONNECT_ERROR
+			   || $errorcode === 28) {
 			# This is not defined in PHP-8.x
 			# 28: CURLE_OPERATION_TIMEDOUT
 			$this->logger->error(
-				'ERROR: Could not connect to imap server via curl: ' .  curl_strerror($errorcode),
+				'ERROR: Could not connect to imap server via curl: ' . curl_strerror($errorcode),
 				['app' => 'user_external']
 			);
-		} elseif ($errorcode === 9 ||
-			   $errorcode === 67 ||
-			   $errorcode === 94) {
+		} elseif ($errorcode === 9
+			   || $errorcode === 67
+			   || $errorcode === 94) {
 			# These are not defined in PHP-8.x
 			# 9: CURLE_REMOTE_ACCESS_DENIED
 			# 67: CURLE_LOGIN_DENIED
 			# 94: CURLE_AUTH_ERROR)
 			$this->logger->error(
-				'ERROR: IMAP Login failed via curl: ' .  curl_strerror($errorcode),
+				'ERROR: IMAP Login failed via curl: ' . curl_strerror($errorcode),
 				['app' => 'user_external']
 			);
 		} else {
 			$this->logger->error(
-			'ERROR: IMAP server returned an error: ' . $errorcode . ' / ' . curl_strerror($errorcode),
+				'ERROR: IMAP server returned an error: ' . $errorcode . ' / ' . curl_strerror($errorcode),
 				['app' => 'user_external']
 			);
 		}

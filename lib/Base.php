@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @author Jonas Sulzer <jonas@violoncello.ch>
  * @author Christian Weiske <cweiske@cweiske.de>
@@ -9,6 +10,9 @@
  */
 namespace OCA\UserExternal;
 
+use OCP\IDBConnection;
+use OCP\IGroupManager;
+use OCP\IUserManager;
 use OCP\Server;
 use Psr\Log\LoggerInterface;
 
@@ -25,17 +29,32 @@ use Psr\Log\LoggerInterface;
  * @link     http://github.com/owncloud/apps
  */
 abstract class Base extends \OC\User\Backend {
-	protected $backend = '';
+	protected string $backend = '';
 	protected readonly LoggerInterface $logger;
+	private readonly IDBConnection $db;
+	private readonly IUserManager $userManager;
+	private readonly IGroupManager $groupManager;
 
 	/**
-	 * Create new instance, set backend name
+	 * Create new instance, set backend name.
+	 *
+	 * Dependencies are optional to allow backends to be instantiated with just
+	 * a backend string (as before), while still being injectable for testing.
 	 *
 	 * @param string $backend Identifier of the backend
 	 */
-	public function __construct($backend) {
+	public function __construct(
+		string $backend,
+		?IDBConnection $db = null,
+		?IUserManager $userManager = null,
+		?IGroupManager $groupManager = null,
+		?LoggerInterface $logger = null,
+	) {
 		$this->backend = $backend;
-		$this->logger = Server::get(LoggerInterface::class);
+		$this->logger = $logger ?? Server::get(LoggerInterface::class);
+		$this->db = $db ?? Server::get(IDBConnection::class);
+		$this->userManager = $userManager ?? Server::get(IUserManager::class);
+		$this->groupManager = $groupManager ?? Server::get(IGroupManager::class);
 	}
 
 	/**
@@ -46,11 +65,11 @@ abstract class Base extends \OC\User\Backend {
 	 * @return bool
 	 */
 	public function deleteUser($uid) {
-		$query = \OC::$server->getDatabaseConnection()->getQueryBuilder();
+		$query = $this->db->getQueryBuilder();
 		$query->delete('users_external')
 			->where($query->expr()->eq('uid', $query->createNamedParameter($uid)))
 			->andWhere($query->expr()->eq('backend', $query->createNamedParameter($this->backend)));
-		$query->execute();
+		$query->executeStatement();
 		return true;
 	}
 
@@ -62,12 +81,12 @@ abstract class Base extends \OC\User\Backend {
 	 * @return string display name
 	 */
 	public function getDisplayName($uid) {
-		$query = \OC::$server->getDatabaseConnection()->getQueryBuilder();
+		$query = $this->db->getQueryBuilder();
 		$query->select('displayname')
 			->from('users_external')
 			->where($query->expr()->eq('uid', $query->createNamedParameter($uid)))
 			->andWhere($query->expr()->eq('backend', $query->createNamedParameter($this->backend)));
-		$result = $query->execute();
+		$result = $query->executeQuery();
 		$user = $result->fetch();
 		$result->closeCursor();
 
@@ -85,12 +104,11 @@ abstract class Base extends \OC\User\Backend {
 	 * @return array with all displayNames (value) and the corresponding uids (key)
 	 */
 	public function getDisplayNames($search = '', $limit = null, $offset = null) {
-		$connection = \OC::$server->getDatabaseConnection();
-		$query = $connection->getQueryBuilder();
+		$query = $this->db->getQueryBuilder();
 		$query->select('uid', 'displayname')
 			->from('users_external')
-			->where($query->expr()->iLike('displayname', $query->createNamedParameter('%' . $connection->escapeLikeParameter($search) . '%')))
-			->orWhere($query->expr()->iLike('uid', $query->createNamedParameter('%' . $connection->escapeLikeParameter($search) . '%')))
+			->where($query->expr()->iLike('displayname', $query->createNamedParameter('%' . $this->db->escapeLikeParameter($search) . '%')))
+			->orWhere($query->expr()->iLike('uid', $query->createNamedParameter('%' . $this->db->escapeLikeParameter($search) . '%')))
 			->andWhere($query->expr()->eq('backend', $query->createNamedParameter($this->backend)));
 		if ($limit) {
 			$query->setMaxResults($limit);
@@ -98,7 +116,7 @@ abstract class Base extends \OC\User\Backend {
 		if ($offset) {
 			$query->setFirstResult($offset);
 		}
-		$result = $query->execute();
+		$result = $query->executeQuery();
 
 		$displayNames = [];
 		while ($row = $result->fetch()) {
@@ -115,11 +133,10 @@ abstract class Base extends \OC\User\Backend {
 	 * @return array with all uids
 	 */
 	public function getUsers($search = '', $limit = null, $offset = null) {
-		$connection = \OC::$server->getDatabaseConnection();
-		$query = $connection->getQueryBuilder();
+		$query = $this->db->getQueryBuilder();
 		$query->select('uid')
 			->from('users_external')
-			->where($query->expr()->iLike('uid', $query->createNamedParameter($connection->escapeLikeParameter($search) . '%')))
+			->where($query->expr()->iLike('uid', $query->createNamedParameter($this->db->escapeLikeParameter($search) . '%')))
 			->andWhere($query->expr()->eq('backend', $query->createNamedParameter($this->backend)));
 		if ($limit) {
 			$query->setMaxResults($limit);
@@ -127,7 +144,7 @@ abstract class Base extends \OC\User\Backend {
 		if ($offset) {
 			$query->setFirstResult($offset);
 		}
-		$result = $query->execute();
+		$result = $query->executeQuery();
 
 		$users = [];
 		while ($row = $result->fetch()) {
@@ -150,7 +167,7 @@ abstract class Base extends \OC\User\Backend {
 	/**
 	 * Change the display name of a user
 	 *
-	 * @param string $uid         The username
+	 * @param string $uid The username
 	 * @param string $displayName The new display name
 	 *
 	 * @return true/false
@@ -160,12 +177,12 @@ abstract class Base extends \OC\User\Backend {
 			return false;
 		}
 
-		$query = \OC::$server->getDatabaseConnection()->getQueryBuilder();
+		$query = $this->db->getQueryBuilder();
 		$query->update('users_external')
 			->set('displayname', $query->createNamedParameter($displayName))
 			->where($query->expr()->eq('uid', $query->createNamedParameter($uid)))
 			->andWhere($query->expr()->eq('backend', $query->createNamedParameter($this->backend)));
-		$query->execute();
+		$query->executeStatement();
 
 		return true;
 	}
@@ -180,18 +197,18 @@ abstract class Base extends \OC\User\Backend {
 	 */
 	protected function storeUser($uid, $groups = []) {
 		if (!$this->userExists($uid)) {
-			$query = \OC::$server->getDatabaseConnection()->getQueryBuilder();
+			$query = $this->db->getQueryBuilder();
 			$query->insert('users_external')
 				->values([
 					'uid' => $query->createNamedParameter($uid),
 					'backend' => $query->createNamedParameter($this->backend),
 				]);
-			$query->execute();
+			$query->executeStatement();
 
 			if ($groups) {
-				$createduser = \OC::$server->getUserManager()->get($uid);
+				$createduser = $this->userManager->get($uid);
 				foreach ($groups as $group) {
-					\OC::$server->getGroupManager()->createGroup($group)->addUser($createduser);
+					$this->groupManager->createGroup($group)->addUser($createduser);
 				}
 			}
 		}
@@ -205,14 +222,13 @@ abstract class Base extends \OC\User\Backend {
 	 * @return boolean
 	 */
 	public function userExists($uid) {
-		$connection = \OC::$server->getDatabaseConnection();
-		$query = $connection->getQueryBuilder();
+		$query = $this->db->getQueryBuilder();
 		$query->select($query->func()->count('*', 'num_users'))
 			->from('users_external')
-			->where($query->expr()->iLike('uid', $query->createNamedParameter($connection->escapeLikeParameter($uid))))
+			->where($query->expr()->iLike('uid', $query->createNamedParameter($this->db->escapeLikeParameter($uid))))
 			->andWhere($query->expr()->eq('backend', $query->createNamedParameter($this->backend)));
-		$result = $query->execute();
-		$users = $result->fetchColumn();
+		$result = $query->executeQuery();
+		$users = $result->fetchOne();
 		$result->closeCursor();
 
 		return $users > 0;
@@ -224,15 +240,41 @@ abstract class Base extends \OC\User\Backend {
 	 * @return int the number of users
 	 */
 	public function countUsers() {
-		$connection = \OC::$server->getDatabaseConnection();
-		$query = $connection->getQueryBuilder();
+		$query = $this->db->getQueryBuilder();
 		$query->select($query->func()->count('*', 'num_users'))
 			->from('users_external')
 			->where($query->expr()->eq('backend', $query->createNamedParameter($this->backend)));
-		$result = $query->execute();
-		$users = $result->fetchColumn();
+		$result = $query->executeQuery();
+		$users = $result->fetchOne();
 		$result->closeCursor();
 
 		return $users;
+	}
+
+	/**
+	 * Resolve a login name to a uid stored in this backend.
+	 *
+	 * Since Nextcloud 32, when a user logs in with their account email address,
+	 * the email is passed directly to checkPassword() instead of the uid.
+	 * This method maps the email back to the uid stored in users_external so
+	 * that backends can authenticate correctly regardless of how the user logged in.
+	 *
+	 * @param string $loginName The login name (uid or email address)
+	 * @return string The resolved uid, or the original loginName if no match is found
+	 */
+	protected function resolveUid(string $loginName): string {
+		if (strpos($loginName, '@') === false) {
+			return $loginName;
+		}
+
+		$users = $this->userManager->getByEmail($loginName);
+		foreach ($users as $user) {
+			$uid = $user->getUID();
+			if ($this->userExists($uid)) {
+				return $uid;
+			}
+		}
+
+		return $loginName;
 	}
 }

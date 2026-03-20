@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Copyright (c) 2015 Thomas Müller <thomas.mueller@tmit.eu>
  * This file is licensed under the Affero General Public License version 3 or
@@ -19,22 +20,24 @@ class WebDavAuth extends Base {
 	/**
 	 * Check if the password is correct without logging in the user
 	 *
-	 * @param string $uid      The username
+	 * @param string $uid The username
 	 * @param string $password The password
 	 *
 	 * @return true/false
 	 */
 	public function checkPassword($uid, $password) {
+		$uid = $this->resolveUid($uid);
+
 		$arr = explode('://', $this->webDavAuthUrl, 2);
 		if (! isset($arr) or count($arr) !== 2) {
-			$this->logger->error('ERROR: Invalid WebdavUrl: "'.$this->webDavAuthUrl.'" ', ['app' => 'user_external']);
+			$this->logger->error('ERROR: Invalid WebdavUrl: "' . $this->webDavAuthUrl . '" ', ['app' => 'user_external']);
 			return false;
 		}
-		list($protocol, $path) = $arr;
-		$url = $protocol.'://'.urlencode($uid).':'.urlencode($password).'@'.$path;
+		[$protocol, $path] = $arr;
+		$url = $protocol . '://' . urlencode($uid) . ':' . urlencode($password) . '@' . $path;
 		$headers = get_headers($url);
 		if ($headers === false) {
-			$this->logger->error('ERROR: Not possible to connect to WebDAV Url: "'.$protocol.'://'.$path.'" ', ['app' => 'user_external']);
+			$this->logger->error('ERROR: Not possible to connect to WebDAV Url: "' . $protocol . '://' . $path . '" ', ['app' => 'user_external']);
 			return false;
 		}
 		$returnCode = substr($headers[0], 9, 3);
