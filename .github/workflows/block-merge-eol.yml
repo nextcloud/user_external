@@ -1,0 +1,58 @@
+# This workflow is provided via the organization template repository
+#
+# https://github.com/nextcloud/.github
+# https://docs.github.com/en/actions/learn-github-actions/sharing-workflows-with-your-organization
+#
+# SPDX-FileCopyrightText: 2021-2024 Nextcloud GmbH and Nextcloud contributors
+# SPDX-License-Identifier: MIT
+
+name: Block merge to EOL
+
+on: pull_request
+
+permissions:
+  contents: read
+
+concurrency:
+  group: block-merge-eol-${{ github.head_ref || github.run_id }}
+  cancel-in-progress: true
+
+jobs:
+  block-eol:
+    name: Block merge to EOL
+    runs-on: ubuntu-latest-low
+    steps:
+      - name: Parse base branch version
+        id: parse
+        run: |
+          branch="${{ github.base_ref }}"
+          if [[ $branch =~ ^stable([0-9]+)$ ]]; then
+            echo "major=${BASH_REMATCH[1]}" >> $GITHUB_OUTPUT
+          else
+            echo "skip=true" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Get current date
+        if: ${{ !steps.parse.outputs.skip }}
+        id: date
+        run: echo "date=$(date -u +'%Y-%m-%d')" >> $GITHUB_OUTPUT
+
+      - name: Fetch EOL data
+        if: ${{ !steps.parse.outputs.skip }}
+        id: eol
+        run: |
+          data=$(curl -s https://raw.githubusercontent.com/nextcloud-releases/updater_server/production/config/major_versions.json)
+          eol=$(echo "$data" | jq -r ".[] | select(.majorVersion == ${{ steps.parse.outputs.major }}) | .eol")
+          echo "eol=$eol" >> $GITHUB_OUTPUT
+
+      - name: Check EOL date
+        if: ${{ !steps.parse.outputs.skip }}
+        run: |
+          eol_date="${{ steps.eol.outputs.eol }}"
+          current_date="${{ steps.date.outputs.date }}"
+          if [[ "$eol_date" != "" && "$eol_date" != "null" ]]; then
+            if [[ "$eol_date" < "$current_date" || "$eol_date" == "$current_date" ]]; then
+              echo "This branch is EOL (End-of-Life) since $eol_date"
+              exit 1
+            fi
+          fi
