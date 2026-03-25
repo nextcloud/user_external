@@ -6,7 +6,7 @@
 # SPDX-FileCopyrightText: 2021-2024 Nextcloud GmbH and Nextcloud contributors
 # SPDX-License-Identifier: MIT
 
-name: Lint php-cs
+name: Lint code style
 
 on: pull_request
 
@@ -20,29 +20,29 @@ concurrency:
 jobs:
   lint:
     runs-on: ubuntu-latest
-
-    name: php-cs
-
+    name: lint
     steps:
       - name: Checkout
-        uses: actions/checkout@692973e3d937129bcbf40652eb9f2f61becf3332 # v4.1.7
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+        with:
+          persist-credentials: false
 
       - name: Get php version
         id: versions
-        uses: icewind1991/nextcloud-version-matrix@58becf3b4bb6dc6cef677b15e2fd8e7d48c0908f # v1.3.1
+        uses: icewind1991/nextcloud-version-matrix@8a7bac6300b2f0f3100088b297995a229558ddba # v1.3.2
 
-      - name: Set up php${{ steps.versions.outputs.php-available }}
-        uses: shivammathur/setup-php@2e947f1f6932d141d076ca441d0e1e881775e95b # v2.31.0
+      - name: Set up php${{ steps.versions.outputs.php-min }}
+        uses: shivammathur/setup-php@accd6127cb78bee3e8082180cb391013d204ef9f # v2.37.0
         with:
-          php-version: ${{ steps.versions.outputs.php-available }}
+          php-version: ${{ steps.versions.outputs.php-min }}
           extensions: bz2, ctype, curl, dom, fileinfo, gd, iconv, intl, json, libxml, mbstring, openssl, pcntl, posix, session, simplexml, xmlreader, xmlwriter, zip, zlib, sqlite, pdo_sqlite
           coverage: none
           ini-file: development
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Install dependencies
-        run: composer i
+      - name: Install nextcloud/ocp
+        run: composer remove nextcloud/ocp --dev && composer i
 
-      - name: Lint
-        run: composer run cs:check || ( echo 'Please run `composer run cs:fix` to format your code' && exit 1 )
+      - name: Check code style
+        run: composer run cs:check || composer run cs:fix && git diff --exit-code
