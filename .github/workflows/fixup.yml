@@ -14,23 +14,19 @@ on:
 
 permissions:
   contents: read
+  pull-requests: write
 
 concurrency:
   group: fixup-${{ github.head_ref || github.run_id }}
   cancel-in-progress: true
 
 jobs:
-  commit-message-check:
-    if: github.event.pull_request.draft == false
-
-    permissions:
-      pull-requests: write
-    name: Block fixup and squash commits
-
+  block-fixup-merge:
     runs-on: ubuntu-latest-low
-
+    if: ${{ !github.event.pull_request.draft }}
+    name: block-fixup-merge
     steps:
-      - name: Run check
+      - name: Block fixup and squash commits
         uses: skjnldsv/block-fixup-merge-action@c138ea99e45e186567b64cf065ce90f7158c236a # v2
         with:
           repo-token: ${{ secrets.GITHUB_TOKEN }}
