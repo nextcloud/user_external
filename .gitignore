@@ -10,3 +10,10 @@ vendor
 vendor-bin/*/vendor
 .php-cs-fixer.cache
 tests/.phpunit.cache
+
+# frontend
+node_modules
+js/*.js
+js/*.js.map
+js/*.mjs.map
+js/*.LICENSE.txt
