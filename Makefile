@@ -52,6 +52,12 @@ appstore:
 	--exclude=/.scrutinizer.yml \
 	--exclude=/.travis.yml \
 	--exclude=/Makefile \
+	--exclude=/node_modules \
+	--exclude=/src \
+	--exclude=/package.json \
+	--exclude=/package-lock.json \
+	--exclude=/tsconfig.json \
+	--exclude=/vite.config.ts \
 	$(project_dir)/ $(sign_dir)/$(app_name)
 	@if [ -f $(cert_dir)/$(app_name).key ]; then \
 		echo "Signing app files…"; \
