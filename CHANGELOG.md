@@ -4,7 +4,16 @@ Starting from v3.0.0, all notable changes to this project will be documented in 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [3.4.0] - 
+## [4.0.0] - 2026-04-15
+
+- Make compatible with Nextcloud 31, 32, 33, and 34
+  [#283](https://github.com/nextcloud/user_external/pull/283) [#286](https://github.com/nextcloud/user_external/pull/286)
+- Bump symfony/process from 5.4.7 to 5.4.46
+  [#262](https://github.com/nextcloud/user_external/pull/262)
+- Fix: Set up logger instance in base constructor
+  [#272](https://github.com/nextcloud/user_external/pull/272) @hschletz
+
+## [3.4.0]
 - Fix out-of-bound array access in IMAP backend 
   [#229](https://github.com/nextcloud/user_external/pull/229) @BjoKaSH
 - Distinguish wrong credentials from other problems in logging output for IMAP backend
