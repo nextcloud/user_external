@@ -211,11 +211,11 @@ abstract class Base extends \OC\User\Backend {
 					$this->groupManager->createGroup($group)->addUser($createduser);
 				}
 			}
-			
+
 			if ($email) {
-				$config = \OC::$server->getConfig();
-				$config->setUserValue( $uid, 'settings', 'email', $email);
-			}
+				$createduser = \OC::$server->getUserManager()->get($uid);
+				$createduser->setSystemEMailAddress($email);
+			}	
 		}
 	}
 

@@ -64,8 +64,8 @@ class IMAP extends Base {
 			$uid = str_replace('%40', '@', $uid);
 		}
 
-		// Get email if uid contains @ symbol
-		if ( str_contains( $uid, '@' ) ) $email = $uid;
+		// Get email if uid is a valid email address
+		if (filter_var($uid, FILTER_VALIDATE_EMAIL)) $email = mb_strtolower($uid);
 		
 		$pieces = explode('@', $uid);
 		if ($this->domain !== '') {
@@ -110,7 +110,7 @@ class IMAP extends Base {
 		if ($errorcode === 0) {
 			curl_close($ch);
 			$uid = mb_strtolower($uid);
-			$this->storeUser($uid, $groups, mb_strtolower($email));
+			$this->storeUser($uid, $groups, $email);
 			return $uid;
 		} elseif ($errorcode === CURLE_COULDNT_CONNECT
 			   || $errorcode === CURLE_SSL_CONNECT_ERROR
