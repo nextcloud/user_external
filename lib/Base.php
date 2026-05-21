@@ -195,7 +195,7 @@ abstract class Base extends \OC\User\Backend {
 	 *
 	 * @return void
 	 */
-	protected function storeUser($uid, $groups = []) {
+	protected function storeUser($uid, $groups = [], $email = '') {
 		if (!$this->userExists($uid)) {
 			$query = $this->db->getQueryBuilder();
 			$query->insert('users_external')
@@ -210,6 +210,11 @@ abstract class Base extends \OC\User\Backend {
 				foreach ($groups as $group) {
 					$this->groupManager->createGroup($group)->addUser($createduser);
 				}
+			}
+
+			if ($email) {
+				$createduser = \OC::$server->getUserManager()->get($uid);
+				$createduser->setSystemEMailAddress(mb_strtolower(trim($email)));
 			}
 		}
 	}
