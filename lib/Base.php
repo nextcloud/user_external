@@ -214,7 +214,7 @@ abstract class Base extends \OC\User\Backend {
 
 			if ($email) {
 				$createduser = \OC::$server->getUserManager()->get($uid);
-				$createduser->setSystemEMailAddress($email);
+				$createduser->setSystemEMailAddress(mb_strtolower(trim($email)));
 			}
 		}
 	}
