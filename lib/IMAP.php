@@ -65,7 +65,9 @@ class IMAP extends Base {
 		}
 
 		// Get email if uid is a valid email address
-		if (filter_var($uid, FILTER_VALIDATE_EMAIL)) $email = mb_strtolower($uid);
+		if (filter_var($uid, FILTER_VALIDATE_EMAIL)) {
+		    $email = mb_strtolower($uid);
+		}
 
 		$pieces = explode('@', $uid);
 		if ($this->domain !== '') {
