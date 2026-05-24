@@ -26,6 +26,7 @@ class IMAP extends Base {
 	private $domain;
 	private $stripeDomain;
 	private $groupDomain;
+	private $setEmail;
 
 	/**
 	 * Create new IMAP authentication provider
@@ -37,7 +38,7 @@ class IMAP extends Base {
 	 * @param boolean $stripeDomain (whether to stripe the domain part from the username or not)
 	 * @param boolean $groupDomain (whether to add the usere to a group corresponding to the domain of the address)
 	 */
-	public function __construct($mailbox, $port = null, $sslmode = null, $domain = null, $stripeDomain = true, $groupDomain = false) {
+	public function __construct($mailbox, $port = null, $sslmode = null, $domain = null, $stripeDomain = true, $groupDomain = false, $setEmail = false) {
 		parent::__construct($mailbox);
 		$this->mailbox = $mailbox;
 		$this->port = $port === null ? 143 : $port;
@@ -45,6 +46,7 @@ class IMAP extends Base {
 		$this->domain = $domain === null ? '' : $domain;
 		$this->stripeDomain = $stripeDomain;
 		$this->groupDomain = $groupDomain;
+		$this->setEmail = $setEmail;
 	}
 
 	/**
@@ -84,6 +86,11 @@ class IMAP extends Base {
 			$username = $uid;
 		}
 
+		$email = null;
+		if ($this->setEmail && strpos($username, '@') !== false) {
+			$email = $username;
+		}
+
 		$groups = [];
 		if ((count($pieces) > 1) && $this->groupDomain && $pieces[1]) {
 			$groups[] = $pieces[1];
@@ -107,7 +114,7 @@ class IMAP extends Base {
 		if ($errorcode === 0) {
 			curl_close($ch);
 			$uid = mb_strtolower($uid);
-			$this->storeUser($uid, $groups);
+			$this->storeUser($uid, $groups, $email);
 			return $uid;
 		} elseif ($errorcode === CURLE_COULDNT_CONNECT
 			   || $errorcode === CURLE_SSL_CONNECT_ERROR
