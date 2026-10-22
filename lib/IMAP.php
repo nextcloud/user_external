@@ -10,6 +10,11 @@
  */
 namespace OCA\UserExternal;
 
+use OCP\IDBConnection;
+use OCP\IGroupManager;
+use OCP\IUserManager;
+use Psr\Log\LoggerInterface;
+
 /**
  * User authentication against an IMAP mail server
  *
@@ -26,6 +31,7 @@ class IMAP extends Base {
 	private $domain;
 	private $stripeDomain;
 	private $groupDomain;
+	private $loginOptions;
 
 	/**
 	 * Create new IMAP authentication provider
@@ -36,15 +42,30 @@ class IMAP extends Base {
 	 * @param string $domain If provided, loging will be restricted to this domain
 	 * @param boolean $stripeDomain (whether to stripe the domain part from the username or not)
 	 * @param boolean $groupDomain (whether to add the usere to a group corresponding to the domain of the address)
+	 * @param string|null $loginOptions curl login options selecting the authentication mechanism
+	 *                                  (for example AUTH=PLAIN, AUTH=DIGEST-MD5, AUTH=NTLM, AUTH=GSSAPI or AUTH=*)
 	 */
-	public function __construct($mailbox, $port = null, $sslmode = null, $domain = null, $stripeDomain = true, $groupDomain = false) {
-		parent::__construct($mailbox);
+	public function __construct(
+		$mailbox,
+		$port = null,
+		$sslmode = null,
+		$domain = null,
+		$stripeDomain = true,
+		$groupDomain = false,
+		$loginOptions = null,
+		?IDBConnection $db = null,
+		?IUserManager $userManager = null,
+		?IGroupManager $groupManager = null,
+		?LoggerInterface $logger = null,
+	) {
+		parent::__construct($mailbox, $db, $userManager, $groupManager, $logger);
 		$this->mailbox = $mailbox;
 		$this->port = $port === null ? 143 : $port;
 		$this->sslmode = $sslmode;
 		$this->domain = $domain === null ? '' : $domain;
 		$this->stripeDomain = $stripeDomain;
 		$this->groupDomain = $groupDomain;
+		$this->loginOptions = $loginOptions;
 	}
 
 	/**
@@ -90,22 +111,24 @@ class IMAP extends Base {
 		}
 
 		$protocol = ($this->sslmode === 'ssl') ? 'imaps' : 'imap';
-		$url = "{$protocol}://{$this->mailbox}:{$this->port}";
-		$ch = curl_init();
+		$options = [
+			CURLOPT_URL => "{$protocol}://{$this->mailbox}:{$this->port}",
+			CURLOPT_RETURNTRANSFER => true,
+			CURLOPT_USERPWD => $username . ':' . $password,
+			CURLOPT_CONNECTTIMEOUT => 10,
+			CURLOPT_CUSTOMREQUEST => 'CAPABILITY',
+		];
 		if ($this->sslmode === 'tls') {
-			curl_setopt($ch, CURLOPT_USE_SSL, CURLUSESSL_ALL);
+			$options[CURLOPT_USE_SSL] = CURLUSESSL_ALL;
 		}
-		curl_setopt($ch, CURLOPT_URL, $url);
-		curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-		curl_setopt($ch, CURLOPT_USERPWD, $username . ':' . $password);
-		curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 10);
-		curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'CAPABILITY');
+		// The admin UI stores an empty string when no login options are set
+		if (is_string($this->loginOptions) && $this->loginOptions !== '') {
+			$options[CURLOPT_LOGIN_OPTIONS] = $this->loginOptions;
+		}
 
-		curl_exec($ch);
-		$errorcode = curl_errno($ch);
+		$errorcode = $this->executeCurl($options);
 
 		if ($errorcode === 0) {
-			curl_close($ch);
 			$uid = mb_strtolower($uid);
 			$this->storeUser($uid, $groups);
 			return $uid;
@@ -136,8 +159,20 @@ class IMAP extends Base {
 			);
 		}
 
-		curl_close($ch);
-
 		return false;
+	}
+
+	/**
+	 * Run the IMAP request
+	 *
+	 * @param array<int, mixed> $options curl options
+	 *
+	 * @return int curl error code, 0 on success
+	 */
+	protected function executeCurl(array $options): int {
+		$ch = curl_init();
+		curl_setopt_array($ch, $options);
+		curl_exec($ch);
+		return curl_errno($ch);
 	}
 }

@@ -36,6 +36,7 @@ export const BACKEND_SPECS: Record<BackendClass, BackendSpec> = {
 			{ key: 'domain', label: 'Email domain restriction', type: 'text', default: '' },
 			{ key: 'stripDomain', label: 'Strip domain from username', type: 'checkbox', default: true },
 			{ key: 'groupDomain', label: 'Create group per domain', type: 'checkbox', default: false },
+			{ key: 'loginOptions', label: 'Login options (e.g. AUTH=DIGEST-MD5)', type: 'text', default: '' },
 		],
 		// 993 is uniquely SSL/TLS (imaps); 143 is the plain/STARTTLS port
 		sslPortMap: { '': 143, 'tls': 143, 'ssl': 993 },
