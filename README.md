@@ -67,7 +67,7 @@ IMAP user and password need to be given for the Nextcloud login.
 
 
 ### Configuration
-The parameters are `host, port, sslmode, domain`.
+The parameters are `host, port, sslmode, domain, stripDomain, groupDomain, loginOptions`.
 Possible values for sslmode are `ssl` or `tls`.
 Add the following to your `config.php`:
 
@@ -75,7 +75,7 @@ Add the following to your `config.php`:
         array(
             'class' => '\OCA\UserExternal\IMAP',
             'arguments' => array(
-                '127.0.0.1', 993, 'ssl', 'example.com', true, false
+                '127.0.0.1', 993, 'ssl', 'example.com', true, false, 'AUTH=DIGEST-MD5'
             ),
         ),
     ),
@@ -91,7 +91,13 @@ is set to true, after successfull login the domain part will be striped and
 the rest used as username in Nextcloud. e.g. 'username@example.com' will be
 'username' in Nextcloud. The sixth parameter toggles whether on creation of
 the user, it is added to a group corresponding to the name of the domain part
-of the address. 
+of the address. The seventh parameter is optional and allows you to specify
+login options, for example which authentication method should be used
+(`AUTH=PLAIN`, `AUTH=DIGEST-MD5`, `AUTH=NTLM`, `AUTH=GSSAPI` or `AUTH=*`).
+This is useful when the server advertises a method that cannot be used from
+Nextcloud (e.g. GSSAPI without Kerberos credentials). The value is passed to
+curl as `CURLOPT_LOGIN_OPTIONS`, so the method has to be supported by both the
+IMAP server and libcurl.
 
 **⚠⚠ Warning:** If you are [**upgrading** from versions **<0.6.0**](https://github.com/nextcloud/user_external/releases/tag/v0.6.0), beside adapting your `config.php` you also have to change the `backend` column in the `users_external` table of the database. In your pre 0.6.0 database it may look like `{127.0.0.1:993/imap/ssl/readonly}INBOX` or similar, but now it has to be just `127.0.0.1` for everything to work flawless again. ⚠⚠
 
